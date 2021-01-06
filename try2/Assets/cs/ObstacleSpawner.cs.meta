@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f92f588cd22b86d49ba3783053e89cd9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - train: {fileID: 919132149155446097, guid: 45b105aa66c2ed648859835aafe445d9, type: 3}
+  - box: {fileID: 919132149155446097, guid: 05efa608ee23bb94a803ed08afc4579b, type: 3}
+  - Lizhol: {fileID: 919132149155446097, guid: dc6c3f7596daf414babff580d5dacd8d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "39939007701",
+    "firebase_url": "https://unityprojectsofi.firebaseio.com",
+    "project_id": "unityprojectsofi",
+    "storage_bucket": "unityprojectsofi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39939007701:android:5c0f91d17e85c83fd26e5c",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.trying"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "39939007701-6gv2up4d3aip3i1m6ugl0jaf9gfeh1od.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYcnLbICPMyfuoHEmJ4J1Tytk-kkTOY3U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "39939007701-6gv2up4d3aip3i1m6ugl0jaf9gfeh1od.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
