@@ -7,6 +7,7 @@ using System;
 public class TotalMetersCS : MonoBehaviour
 {
     public Text TotalMeters;
+    string temp;
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +19,7 @@ public class TotalMetersCS : MonoBehaviour
     void Update()
     {
         //Updating the score on the screen
-        string temp = "";
+        temp = "";
         int num = 7 - (Math.Round(SetUp.totalRun) + " ").Length;
         for (int i = 0; i < num; i++)
         {

@@ -12,8 +12,8 @@ public class BackGroundSpawn : MonoBehaviour
 {
     public GameObject Lamp;
     public GameObject Tamrur;
-    public int whatSpawn, lane, numLamps, numTamrur;
-    public float spawnRate, nextSpawn;
+    int whatSpawn, lane, numLamps, numTamrur;
+    float spawnRate, nextSpawn;
     public static float spawnerZ;
     // Start is called before the first frame update
     void Start()
@@ -47,11 +47,11 @@ public class BackGroundSpawn : MonoBehaviour
                 {
                     case 1:
                         numLamps++;
-                        lampSpawner(lane, Lamp, numLamps);
+                        SpawnLamp(lane, Lamp, numLamps);
                         break;
                     case 2:
                         numTamrur++;
-                        tamrurSpawner(lane, Tamrur, numTamrur);
+                        SpawnTamrur(lane, Tamrur, numTamrur);
                         break;
                 }
                 nextSpawn = Time.time + spawnRate;
@@ -59,7 +59,7 @@ public class BackGroundSpawn : MonoBehaviour
         }
     }
     //spawn lamp in given place
-    void lampSpawner(int lane, GameObject Lamp, int numLamps)
+    void SpawnLamp(int lane, GameObject Lamp, int numLamps)
     {
 
         Vector3 temp = new Vector3(0, 0, spawnerZ);
@@ -88,7 +88,7 @@ public class BackGroundSpawn : MonoBehaviour
 
     }
     //spawns tamrur in given place
-    void tamrurSpawner(int lane, GameObject Tamrur, int numTamrur)
+    void SpawnTamrur(int lane, GameObject Tamrur, int numTamrur)
     {
         Vector3 temp = new Vector3(0, 0, spawnerZ);
         int rotation = 90;

@@ -13,21 +13,21 @@ public class MainMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        coinsTxt.text = "coins: " + AuthScript.instance.user.coins;
+        coinsTxt.text = "coins: " + AuthScript.instance.GetUser().GetCoins();
     }
 
     // Update is called once per frame
-    
-    public void GoToShop()
+
+    void GoToShop()
     {
         SceneManager.LoadScene("Shop");
     }
-    public void GoToGame()
+    void GoToGame()
     {
         //ChangeColor.temp.AddRange(new List<int>() { GetUser.FirstColor[0], GetUser.FirstColor[1], GetUser.FirstColor[2], GetUser.FirstColor[3] });
         SceneManager.LoadScene("SampleScene");
     }
-    public void GoToLeaderBoard()
+    void GoToLeaderBoard()
     {
         SceneManager.LoadScene("LeaderBoard");
     }

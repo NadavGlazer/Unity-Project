@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class ObstacleMovement : MonoBehaviour
 {
-    public bool exit;
+    bool exit;
     public float acceleration;
+    string trainCloneName, crateCloneName;
+    int trainZOfDestruction, crateZOfDestruction;
+    float trainAcc, crateAcc;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,12 +24,12 @@ public class ObstacleMovement : MonoBehaviour
             if (!exit)
             {
                 //deleting the object if he is in the right place
-                if (transform.GetComponent<Transform>().position.z < -12 && transform.name != "Train(Clone)")
+                if (transform.GetComponent<Transform>().position.z < trainZOfDestruction && transform.name == trainCloneName)
                 {
                     Destroy(this.gameObject);
                     exit = true;
                 }
-                else if (transform.GetComponent<Transform>().position.z < -11 && transform.name == "Create(Clone)")
+                else if (transform.GetComponent<Transform>().position.z < crateZOfDestruction && transform.name == crateCloneName)
                 {
                     Destroy(this.gameObject);
                     exit = true;
@@ -34,13 +37,13 @@ public class ObstacleMovement : MonoBehaviour
                 else if (!PauseMenu.IsPaused)
                 {
                     //giving the object speed
-                    if (transform.name == "Train(Clone)")
+                    if (transform.name == trainCloneName)
                     {
-                        transform.GetComponent<Transform>().position -= new Vector3(0, 0, acceleration * (float)1.1);
+                        transform.GetComponent<Transform>().position -= new Vector3(0, 0, acceleration * trainAcc);
                     }
                     else
                     {
-                        transform.GetComponent<Transform>().position -= new Vector3(0, 0, acceleration * (float)1);
+                        transform.GetComponent<Transform>().position -= new Vector3(0, 0, acceleration * crateAcc);
                     }
                 }
             }
@@ -51,5 +54,11 @@ public class ObstacleMovement : MonoBehaviour
     {
         exit = false;
         acceleration = SetUp.totalAcceleration;
+        trainCloneName = "Train(Clone)";
+        crateCloneName = "Crate(Clone)";
+        trainZOfDestruction = -12;
+        crateZOfDestruction = -11;
+        trainAcc = 1.1f;
+        crateAcc = 1f;
     }
 }

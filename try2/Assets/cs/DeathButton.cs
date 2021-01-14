@@ -14,27 +14,32 @@ public class DeathButton : MonoBehaviour
     public Text coinText;
     public Text totalCoinsText;
     bool first;
+    string[] textUI;
     void Start()
     {
-        first = true;
+        UpdateVer();
     }
     void Update()
     {
-        if (Animations.booliann && first)
+        if (Animations.deathAnimationFinished && first)
         {
             int temp = (int)Math.Round(SetUp.totalRun / 10 + UnityEngine.Random.Range(-SetUp.totalRun / 15, SetUp.totalRun / 15));
-            AuthScript.instance.user.coins += temp;
+            AuthScript.instance.GetUser().ChangeCoins(temp);
+
             int score = (int)Math.Round(SetUp.totalRun);
-            scoreText.text = "score: " + score;
-            coinText.text = "coins earned: " + temp;
-            totalCoinsText.text = "coins: " + AuthScript.instance.user.coins;
-            first = false;
-            if (score > AuthScript.instance.user.bestScore)
+            scoreText.text = textUI[0] + score;
+            coinText.text = textUI[1] + temp;
+            totalCoinsText.text = textUI[2] + AuthScript.instance.GetUser().GetCoins();
+
+            if (score > AuthScript.instance.GetUser().GetBestScore())
             {
-                AuthScript.instance.user.bestScore = score;
+                AuthScript.instance.GetUser().SetBestScore(score);
             }
-            UpdateUser(AuthScript.instance.user);
-            UpdateLeaderBoard(score, AuthScript.instance.user.name);
+
+            UpdateUser(AuthScript.instance.GetUser());
+            UpdateLeaderBoard(score, AuthScript.instance.GetUser().GetName());
+
+            first = false;
         }
     }
     //starting new game
@@ -45,28 +50,29 @@ public class DeathButton : MonoBehaviour
         //Application.LoadLevel(Application.loadedLevel);
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-    private void UpdateUser(User user)
+    void UpdateUser(User user)
     {
         string json = JsonUtility.ToJson(user);
-        FirebaseDatabase.DefaultInstance.RootReference.Child("Users").Child(AuthScript.instance.userID).SetRawJsonValueAsync(json);
+        FirebaseDatabase.DefaultInstance.RootReference.Child("Users").Child(AuthScript.instance.GetUserId()).SetRawJsonValueAsync(json);
     }
-    void UpdateLeaderBoard(int newLead, string newLeads)
+    void UpdateLeaderBoard(int newScore, string newName)
     {
-        if (newLead < AuthScript.leaderBoards[9].score)
+        if (newScore < AuthScript.leaderBoards[9].GetScore())
         {
             return;
         }
         else
         {
-            AuthScript.leaderBoards[9].score = newLead;
-            AuthScript.leaderBoards[9].name = newLeads;
+            AuthScript.leaderBoards[9].SetScore(newScore);
+            AuthScript.leaderBoards[9].SetName(newName);
+            AuthScript.leaderBoards[9].SetId(AuthScript.instance.GetUserId());
         }
         LeaderBoard temp;
         for (int i = 0; i < AuthScript.leaderBoards.Length - 1; i++)
         {
             for (int j = i + 1; j < AuthScript.leaderBoards.Length; j++)
             {
-                if (AuthScript.leaderBoards[i].score < AuthScript.leaderBoards[j].score)
+                if (AuthScript.leaderBoards[i].GetScore() < AuthScript.leaderBoards[j].GetScore())
                 {
                     temp = new LeaderBoard(AuthScript.leaderBoards[i]);
                     AuthScript.leaderBoards[i] = new LeaderBoard(AuthScript.leaderBoards[j]);
@@ -85,4 +91,13 @@ public class DeathButton : MonoBehaviour
         FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child("9").SetRawJsonValueAsync(JsonUtility.ToJson(AuthScript.leaderBoards[8]));
         FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child("10").SetRawJsonValueAsync(JsonUtility.ToJson(AuthScript.leaderBoards[9]));
     }
+    void UpdateVer()
+    {
+        first = true;
+        textUI = new string[3];
+        textUI[0] = "score: ";
+        textUI[1] = "coins earned: ";
+        textUI[2] = "coins: ";
+    }
+
 }

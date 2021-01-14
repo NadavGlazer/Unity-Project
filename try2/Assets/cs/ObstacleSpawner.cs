@@ -8,13 +8,13 @@ public class ObstacleSpawner : MonoBehaviour
 {
     public GameObject train;
     public GameObject box;
-    public GameObject Lizhol;
-    public float nextSpawn;
-    public int whatTemplate;
+    float nextSpawn;
+    int whatTemplate;
     int whereToSpawn;
-    public static Vector3 temp;
-    private Vector3 trainColliderSize, boxColliderSize, boxColliderCenter, trainColliderCenter;
-    private float trainY, boxY, zhilaY;
+    Vector3 temp;
+    Vector3 trainColliderSize, boxColliderSize, boxColliderCenter, trainColliderCenter, trainLocalScale, crateLocalScale;
+    float trainY, boxY;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,20 +33,20 @@ public class ObstacleSpawner : MonoBehaviour
                 {
                     case 1:
                         SpawnTrain(-1);
-                        SpawnBox(1);
+                        SpawnCrate(1);
                         SpawnTrain(0);
                         break;
                     case 2:
                         SpawnTrain(1);
                         SpawnTrain(0);
-                        SpawnBox(-1);
+                        SpawnCrate(-1);
                         break;
                     case 3:
                         SpawnTrain(1);
-                        SpawnBox(-0);
+                        SpawnCrate(-0);
                         break;
                     case 4:
-                        SpawnBox(1);
+                        SpawnCrate(1);
                         SpawnTrain(0);
                         SpawnTrain(-1);
                         break;
@@ -62,7 +62,7 @@ public class ObstacleSpawner : MonoBehaviour
                 }
                 if (Time.time < 15f)
                 {
-                    nextSpawn = Time.time + 3.5f;
+                    nextSpawn = Time.time + 4f;
                 }
                 else if (Time.time < 30f)
                 {
@@ -88,11 +88,11 @@ public class ObstacleSpawner : MonoBehaviour
         trainTemp.GetComponent<BoxCollider>().isTrigger = false;
         trainTemp.GetComponent<BoxCollider>().size = trainColliderSize;
         trainTemp.GetComponent<BoxCollider>().center = trainColliderCenter;
-        trainTemp.GetComponent<Transform>().localScale = new Vector3((float)1.5, (float)1, (float)1.5);
+        trainTemp.GetComponent<Transform>().localScale = trainLocalScale;
         trainTemp.AddComponent<ObstacleMovement>();
     }
     //function that spawn one new Box object
-    void SpawnBox(int where)
+    void SpawnCrate(int where)
     {
         temp = new Vector3((float)where, boxY, transform.position.z);
         var boxTemp = Instantiate(box, temp, Quaternion.identity) as GameObject;
@@ -104,27 +104,14 @@ public class ObstacleSpawner : MonoBehaviour
         boxTemp.GetComponent<BoxCollider>().isTrigger = false;
         boxTemp.GetComponent<BoxCollider>().size = boxColliderSize;
         boxTemp.GetComponent<BoxCollider>().center = boxColliderCenter;
-        boxTemp.GetComponent<Transform>().localScale = new Vector3((float)0.3, (float)0.3, (float)0.3);
+        boxTemp.GetComponent<Transform>().localScale = crateLocalScale;
         boxTemp.AddComponent<ObstacleMovement>();
     }
 
-    void SpawnZhila(int where)
-    {
-        temp = new Vector3((float)where + 0.3f, zhilaY, transform.position.z);
-        var zhilaTemp = Instantiate(Lizhol, temp, Quaternion.identity) as GameObject;
-        zhilaTemp.AddComponent<MeshCollider>();
-        zhilaTemp.AddComponent<Rigidbody>();
-        zhilaTemp.GetComponent<MeshCollider>().convex = true;
-        zhilaTemp.GetComponent<Rigidbody>().useGravity = false;
-        zhilaTemp.GetComponent<Rigidbody>().isKinematic = true;
-        zhilaTemp.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
-        zhilaTemp.GetComponent<Transform>().localScale = new Vector3((float)0.04, (float)0.05, (float)0.04);
-        zhilaTemp.AddComponent<ObstacleMovement>();
-    }
     //function that sets the starting values of the objects
     void UpdateVer()
     {
-        nextSpawn = 2f;
+        nextSpawn = 0f;
         trainColliderSize = new Vector3((float)0.6, (float)0.6, (float)2.55);
         boxColliderSize = new Vector3((float)2.3, (float)2.35, (float)2.3);
         boxColliderCenter = new Vector3((float)0, (float)1.145, (float)0);
@@ -132,6 +119,7 @@ public class ObstacleSpawner : MonoBehaviour
         trainColliderCenter = new Vector3(0, 0, 0.02f);
         trainY = 0.37f;
         boxY = -0.01f;
-        zhilaY = 0.2f;
+        trainLocalScale = new Vector3((float)1.5, (float)1, (float)1.5);
+        crateLocalScale = new Vector3((float)0.3, (float)0.3, (float)0.3);
     }
 }

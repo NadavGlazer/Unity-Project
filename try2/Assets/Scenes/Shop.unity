@@ -207,7 +207,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6132523974305989353}
         m_TargetAssemblyTypeName: ColorChange, Assembly-CSharp
-        m_MethodName: Back
+        m_MethodName: BackToMainPage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -423,7 +423,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6132523974305989353}
         m_TargetAssemblyTypeName: ColorChange, Assembly-CSharp
-        m_MethodName: LeftButtonChange
+        m_MethodName: MoveLeftInShop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2459,7 +2459,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6132523974305989353}
         m_TargetAssemblyTypeName: ColorChange, Assembly-CSharp
-        m_MethodName: CreateNewColor
+        m_MethodName: AddNewColorToDB
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2791,7 +2791,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6132523974305989353}
         m_TargetAssemblyTypeName: ColorChange, Assembly-CSharp
-        m_MethodName: RightButtonChange
+        m_MethodName: MoveRightInShop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3018,7 +3018,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6132523974305989353}
         m_TargetAssemblyTypeName: ColorChange, Assembly-CSharp
-        m_MethodName: Use
+        m_MethodName: UseCurrentColor
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3216,7 +3216,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6132523974305989353}
         m_TargetAssemblyTypeName: ColorChange, Assembly-CSharp
-        m_MethodName: AddNewColor
+        m_MethodName: GoToCreateNewColor
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3642,7 +3642,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6132523974305989353}
         m_TargetAssemblyTypeName: ColorChange, Assembly-CSharp
-        m_MethodName: Buy
+        m_MethodName: BuyColor
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5424,8 +5424,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2af50fdf486e00b4db456a8b8357533f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  place: 0
-  lastP: 0
   mat: {fileID: 2100000, guid: 7c271255f3d72d547a238d3949b61dbd, type: 2}
   mText: {fileID: 1030840699}
   r: {fileID: 1192856976}

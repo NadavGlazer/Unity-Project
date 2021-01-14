@@ -9,13 +9,13 @@ using System;
 
 public class Move : MonoBehaviour
 {
-    public bool tap, detUp, detLe, detRi, detDo;
-    public float left, right, lim;
+    bool tap, detUp, detLe, detRi, detDo;
+    float left, right, FrameAmount, distanceFromGround;
     public Transform Player;
-    public Vector2 startTouchPosition, endTouchPosition;
-    public int counter;
-    public float distanceFromGround;
+    Vector2 startTouchPosition, endTouchPosition;
     public static bool isGrounded, swipeLeft, swipeRight, secondJump, firstJump, isSlideDown;
+    float playerZ, movePositionPerFrameLR, firstJumpForce, secondJumpForce, slideDownForce;
+    int pixelAmountForSwipe, frameAmountBetwinMovement;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,13 +26,13 @@ public class Move : MonoBehaviour
     {
         if (!CollCheck.HasLost && Time.timeScale == 1f)
         {
-            Player.position = new Vector3(Player.position.x, Player.position.y, (float)-6);
+            Player.position = new Vector3(Player.position.x, Player.position.y, playerZ);
             if (!swipeRight && !swipeLeft)
             {
                 float temp = (float)System.Math.Round(Player.position.x);
-                Player.position = new Vector3(temp, Player.position.y, (float)-6);
+                Player.position = new Vector3(temp, Player.position.y, playerZ);
             }
-            lim++;
+            FrameAmount++;
             SwipeCheckInPhone();
 
             isSlideDown = (detDo || (Input.GetKey(KeyCode.DownArrow)));
@@ -41,8 +41,8 @@ public class Move : MonoBehaviour
             {
                 firstJump = secondJump = false;
             }
-            SwipeCheck();
-            Movement();
+            CheckingIfAbleToMoveThePlayer();
+            SettingPositionBasedOnSwipes();
         }
     }
     // detecting swipes in phone and its direction
@@ -89,7 +89,7 @@ public class Move : MonoBehaviour
             }
         }
         //confirms that the swipe is not a mistake
-        if (endTouchPosition.magnitude > 100)
+        if (endTouchPosition.magnitude > pixelAmountForSwipe)
         {
             float tempX = endTouchPosition.x;
             float tempY = endTouchPosition.y;
@@ -123,13 +123,13 @@ public class Move : MonoBehaviour
         }
     }
     //moving the character left and right by the data we got from the player
-    void Movement()
+    void SettingPositionBasedOnSwipes()
     {
         if (swipeLeft)
         {
             swipeRight = false;
             //if posiball moving to the left way
-            Player.position -= new Vector3((float)0.07, 0, 0);
+            Player.position -= new Vector3(movePositionPerFrameLR, 0, 0);
             if (Player.position.x + 1 <= left)
             {
                 swipeLeft = false;
@@ -141,67 +141,63 @@ public class Move : MonoBehaviour
         {
             swipeLeft = false;
             //if posiball moving to the right way
-            Player.position += new Vector3((float)0.07, 0, 0);
+            Player.position += new Vector3(movePositionPerFrameLR, 0, 0);
             if (Player.position.x - 1 >= right)
             {
                 swipeRight = false;
-
                 System.Math.Round(Player.position.x);
                 detRi = false;
             }
         }
     }
     //checking swipes data
-    void SwipeCheck()
+    void CheckingIfAbleToMoveThePlayer()
     {
-        if (lim >= 5 && (detUp || (Input.GetKey(KeyCode.UpArrow))))
+        if (FrameAmount >= frameAmountBetwinMovement && (detUp || (Input.GetKey(KeyCode.UpArrow))))
         {
             if (!firstJump)
             {
                 Player.position = new Vector3(Player.position.x, Player.position.y + (float)0.1, Player.position.z);
-                GetComponent<Rigidbody>().velocity = new Vector3(0, (float)3.5, 0);
-                lim = 0;
+                GetComponent<Rigidbody>().velocity = new Vector3(0, firstJumpForce, 0);
+                FrameAmount = 0;
                 detUp = false;
                 firstJump = true;
-                //counter = 50;
             }
-            else if (firstJump && !secondJump && lim >= 5)
+            else if (firstJump && !secondJump && FrameAmount >= frameAmountBetwinMovement)
             {
-                GetComponent<Rigidbody>().velocity = new Vector3(0, (float)3, 0);
-                lim = 0;
+                GetComponent<Rigidbody>().velocity = new Vector3(0, secondJumpForce, 0);
+                FrameAmount = 0;
                 detUp = false;
                 secondJump = true;
             }
-
         }
-        if ((lim >= 5 && (detDo || (Input.GetKey(KeyCode.DownArrow)))))
+        if ((FrameAmount >= frameAmountBetwinMovement && (detDo || (Input.GetKey(KeyCode.DownArrow)))))
         {
             if (!isGrounded)
             {
-                GetComponent<Rigidbody>().velocity = new Vector3(0, (float)-3.5, 0);
-                lim = 0;
+                GetComponent<Rigidbody>().velocity = new Vector3(0, slideDownForce, 0);
+                FrameAmount = 0;
             }
             detDo = false;
-
         }
-        if (lim >= 5 && ((!swipeRight && detRi) || (Input.GetKey(KeyCode.RightArrow) && !swipeRight)))
+        if (FrameAmount >= frameAmountBetwinMovement && ((!swipeRight && detRi) || (Input.GetKey(KeyCode.RightArrow) && !swipeRight)))
         {
             if ((Player.position.x < 1 && !swipeLeft) && System.Math.Abs(Player.position.x - System.Math.Round(Player.position.x)) < 0.1)
             {
                 swipeRight = true;
                 right = Player.position.x;
                 System.Math.Round(right);
-                lim = 0;
+                FrameAmount = 0;
             }
         }
-        if (lim >= 5 && ((!swipeLeft && detLe) || (Input.GetKey(KeyCode.LeftArrow) && !swipeLeft)))
+        if (FrameAmount >= frameAmountBetwinMovement && ((!swipeLeft && detLe) || (Input.GetKey(KeyCode.LeftArrow) && !swipeLeft)))
         {
             if ((Player.position.x > -1 && !swipeRight) && System.Math.Abs(Player.position.x - System.Math.Round(Player.position.x)) < 0.1)
             {
                 swipeLeft = true;
                 left = Player.position.x;
                 System.Math.Round(left);
-                lim = 0;
+                FrameAmount = 0;
             }
         }
     }
@@ -209,15 +205,6 @@ public class Move : MonoBehaviour
     bool isOnGround()
     {
         return (Physics.Raycast(Player.position, Vector3.down, distanceFromGround));
-        //if (counter <= 0)
-        //{
-        //    return (Physics.Raycast(Player.position, Vector3.down, distanceFromGround));
-        //}
-        //else
-        //{
-        //    counter--;
-        //    return false;
-        //}
     }
     //function that sets the starting values of the objects
     void UpdateVer()
@@ -231,10 +218,16 @@ public class Move : MonoBehaviour
         }
 
         tap = swipeLeft = swipeRight = detUp = detRi = detLe = detDo = firstJump = secondJump = isSlideDown = false;
-        left = right = lim = 0;
+        left = right = FrameAmount = 0;
         Player.position = new Vector3((float)0, (float)0.05, (float)-6);
-        counter = 0;
         distanceFromGround = 0.1f;
         isGrounded = true;
+        playerZ = -6f;
+        pixelAmountForSwipe = 100;
+        movePositionPerFrameLR = 0.07f;
+        frameAmountBetwinMovement = 5;
+        firstJumpForce = 3.5f;
+        secondJumpForce = 3f;
+        slideDownForce = -3.5f;
     }
 }

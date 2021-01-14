@@ -16,7 +16,7 @@ public class AuthScript : MonoBehaviour
     public InputField password;
     public Text errortext;
     bool moveScene;
-    public static Singleton instance;
+    public static CurrentUser instance;
     public static LeaderBoard[] leaderBoards;
     // Start is called before the first frame update
     void Start()
@@ -35,12 +35,12 @@ public class AuthScript : MonoBehaviour
             else if (task.IsCompleted)
             {
                 DataSnapshot snapshot = task.Result;
-                leaderBoards[0] = new LeaderBoard(0, "temp");
-                while (leaderBoards[0].score == 0)
+                leaderBoards[0] = new LeaderBoard(0, "temp", "0");
+                while (leaderBoards[0].GetScore() == 0)
                 {
                     for (int i = 0; i < 10; i++)
                     {
-                        leaderBoards[i] = new LeaderBoard(int.Parse(snapshot.Child((i + 1).ToString()).Child("score").Value.ToString()), snapshot.Child((i + 1).ToString()).Child("name").Value.ToString());
+                        leaderBoards[i] = new LeaderBoard(int.Parse(snapshot.Child((i + 1).ToString()).Child("score").Value.ToString()), snapshot.Child((i + 1).ToString()).Child("name").Value.ToString(), snapshot.Child((i + 1).ToString()).Child("ID").Value.ToString());
                     }
                 }
             }
@@ -56,7 +56,7 @@ public class AuthScript : MonoBehaviour
             SceneManager.LoadScene("Main Menu");
         }
     }
-    public void Register()
+    void Register()
     {
         auth.CreateUserWithEmailAndPasswordAsync(email.text.ToString(), password.text.ToString()).ContinueWith(task =>
         {
@@ -76,11 +76,11 @@ public class AuthScript : MonoBehaviour
             Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
             reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
 
-            writeNewUser(auth.CurrentUser.UserId, email.text.ToString().Substring(0, email.text.ToString().IndexOf("@")));
+            writeNewUserInDb(auth.CurrentUser.UserId, email.text.ToString().Substring(0, email.text.ToString().IndexOf("@")));
             moveScene = true;
         });
     }
-    public void SignIn()
+    void SignIn()
     {
         auth.SignInWithEmailAndPasswordAsync(email.text.ToString(), password.text.ToString()).ContinueWith(task1 =>
         {
@@ -97,7 +97,6 @@ public class AuthScript : MonoBehaviour
             Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
             reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
             //
-
             reference.GetValueAsync().ContinueWith(task =>
             {
                 if (task.IsFaulted)
@@ -123,16 +122,18 @@ public class AuthScript : MonoBehaviour
                 {
                     tempOwned.Add(int.Parse(snapshot.Child("OwnColors").Child(i.ToString()).Value.ToString()));
                 }
+
                 tempcoins = int.Parse(snapshot.Child("coins").Value.ToString());
                 tempBest = int.Parse(snapshot.Child("bestScore").Value.ToString());
                 tempName = snapshot.Child("name").Value.ToString();
+
                 User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, email.text.ToString().Substring(0, email.text.ToString().IndexOf("@")));
-                instance = new Singleton(temp, auth.CurrentUser.UserId);
+                instance = new CurrentUser(temp, auth.CurrentUser.UserId);
                 moveScene = true;
             });
         });
     }
-    private void writeNewUser(string id, string name)
+    void writeNewUserInDb(string id, string name)
     {
         User user = new User(name);
         user.AddColor(new List<int> { 255, 0, 0, 150 });
@@ -143,8 +144,7 @@ public class AuthScript : MonoBehaviour
         string json = JsonUtility.ToJson(user);
         reference.SetRawJsonValueAsync(json);
 
-
-        instance = new Singleton(user, id);
+        instance = new CurrentUser(user, id);
     }
 }
 public class User
@@ -210,54 +210,125 @@ public class User
     {
         return CurrentColor;
     }
+    public List<int> GetOptional()
+    {
+        return OptionalColors;
+    }
+    public int GetCoins()
+    {
+        return coins;
+    }
+    public void ChangeCoins(int coins)
+    {
+        this.coins += coins;
+    }
+    public void SetCurrentPlace(int place)
+    {
+        CurrentColor[4] = place;
+    }
+    public List<int> GetOwned()
+    {
+        return OwnColors;
+    }
+    public void SetCoins(int coins)
+    {
+        this.coins = coins;
+    }
+    public string GetName()
+    {
+        return name;
+    }
+    public int GetBestScore()
+    {
+        return bestScore;
+    }
+    public void SetBestScore(int score)
+    {
+        bestScore = score;
+    }
 }
 public class LeaderBoard
 {
     public int score;
     public string name;
-    public LeaderBoard(int score, string name)
+    public string ID;
+    public LeaderBoard(int score, string name, string ID)
     {
         this.score = score;
         this.name = name;
+        this.ID = ID;
     }
     public LeaderBoard(LeaderBoard temp)
     {
         this.score = temp.score;
         this.name = temp.name;
+        this.ID = temp.ID;
+    }
+    public int GetScore()
+    {
+        return score;
+    }
+    public string GetName()
+    {
+        return name;
+    }
+    public void SetName(string name)
+    {
+        this.name = name;
+    }
+    public void SetScore(int score)
+    {
+        this.score = score;
+    }
+    public void SetId(string ID)
+    {
+        this.ID = ID;
+    }
+    public string GetId()
+    {
+        return ID;
     }
 }
-public class Singleton
+public class CurrentUser
 {
     public User user;
     public string userID;
-    public Singleton(List<int> current, List<int> optional, List<int> own, int coins, string id, int best, string name)
+    public CurrentUser(List<int> current, List<int> optional, List<int> own, int coins, string id, int best, string name)
     {
         user = new User(coins, own, current, optional, best, name);
         userID = id;
     }
-    public Singleton(User user, string id)
+    public CurrentUser(User user, string id)
     {
         this.user = new User(user);
         userID = id;
     }
     public void UpdateCurrent(List<int> current)
     {
-        user.CurrentColor.Clear();
-        user.CurrentColor.AddRange(current);
+        user.GetCurrent().Clear();
+        user.GetCurrent().AddRange(current);
     }
     public void UpdateOwned(List<int> owned)
     {
-        user.OwnColors.Clear();
-        user.OwnColors.AddRange(owned);
+        user.GetOwned().Clear();
+        user.GetOwned().AddRange(owned);
     }
     public void UpdateOptional(List<int> optional)
     {
-        user.OptionalColors.Clear();
-        user.OptionalColors.AddRange(optional);
+        user.GetOptional().Clear();
+        user.GetOptional().AddRange(optional);
     }
     public void UpdateCoins(int coins)
     {
-        user.coins = coins;
+        user.SetCoins(coins);
+    }
+    public User GetUser()
+    {
+        return user;
+    }
+    public string GetUserId()
+    {
+        return userID;
     }
 }
 

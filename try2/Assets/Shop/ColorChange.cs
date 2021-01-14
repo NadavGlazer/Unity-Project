@@ -10,7 +10,7 @@ using Firebase.Unity;
 
 public class ColorChange : MonoBehaviour
 {
-    public int place, lastP;
+    int place, lastP, firstP;
     public Material mat;
     public Text mText;
     public Scrollbar r;
@@ -20,32 +20,43 @@ public class ColorChange : MonoBehaviour
     public GameObject CreatingNew;
     public Text totalCoins;
     bool isCreating;
-    int rn, gn, bn;
+    int rn, gn, bn, placeChange;
     public Text isUsed;
     public DatabaseReference reference;
-
+    string[] textUI;
+    int costOfColor;
     // Start is called before the first frame update
     void Start()
     {
+        UpdateVer();
+    }
+    void UpdateVer()
+    {
+        costOfColor = 200;
+        textUI = new string[4];
+        textUI[0] = "";
+        textUI[1] = "using";
+        textUI[2] = "Owned";
+        textUI[3] = "Cost: " + costOfColor;
         Time.timeScale = 1f;
 
-        reference = FirebaseDatabase.DefaultInstance.RootReference.Child("Users").Child(AuthScript.instance.userID);
-        place = AuthScript.instance.user.CurrentColor[4];
-        lastP = AuthScript.instance.user.OptionalColors.Count - 4;
-
+        reference = FirebaseDatabase.DefaultInstance.RootReference.Child("Users").Child(AuthScript.instance.GetUserId());
+        place = AuthScript.instance.GetUser().GetCurrent()[4];
+        lastP = AuthScript.instance.GetUser().GetOptional().Count - 4;
+        firstP = 1;
+        placeChange = 4;
 
         isCreating = false;
 
         mat.SetColor("_Color", new Color(
-            AuthScript.instance.user.CurrentColor[0],
-            AuthScript.instance.user.CurrentColor[1],
-            AuthScript.instance.user.CurrentColor[2],
-            AuthScript.instance.user.CurrentColor[3]));
-        place = AuthScript.instance.user.CurrentColor[4];
+            AuthScript.instance.GetUser().GetCurrent()[0],
+            AuthScript.instance.GetUser().GetCurrent()[1],
+            AuthScript.instance.GetUser().GetCurrent()[2],
+            AuthScript.instance.GetUser().GetCurrent()[3]));
+        place = AuthScript.instance.GetUser().GetCurrent()[4];
         SetCoins();
-        OnChange();
+        UpdateIfOwned();
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -61,148 +72,143 @@ public class ColorChange : MonoBehaviour
         }
         else
         {
-            if (isUsing())
+            if (IsCurrentColorUsed())
             {
-                isUsed.text = "using";
+                isUsed.text = textUI[1];
             }
             else
             {
-                isUsed.text = "";
+                isUsed.text = textUI[0];
             }
-            OnChange();
+            UpdateIfOwned();
             mat.SetColor("_Color", new Color32(
-               (byte)AuthScript.instance.user.OptionalColors[place],
-               (byte)AuthScript.instance.user.OptionalColors[place + 1],
-                (byte)AuthScript.instance.user.OptionalColors[place + 2],
-                (byte)AuthScript.instance.user.OptionalColors[place + 3]));
+               (byte)AuthScript.instance.GetUser().GetOptional()[place],
+               (byte)AuthScript.instance.GetUser().GetOptional()[place + 1],
+                (byte)AuthScript.instance.GetUser().GetOptional()[place + 2],
+                (byte)AuthScript.instance.GetUser().GetOptional()[place + 3]));
         }
     }
-    public void LeftButtonChange()
+    void MoveLeftInShop()
     {
-        if (place == 1)
+        if (place == firstP)
         {
             place = lastP;
         }
         else
         {
-            place -= 4;
+            place -= placeChange;
         }
     }
-    public void RightButtonChange()
+    void MoveRightInShop()
     {
         if (place == lastP)
         {
-            place = 1;
+            place = firstP;
         }
         else
         {
-            place += 4;
+            place += placeChange;
         }
     }
-    void OnChange()
+    void UpdateIfOwned()
     {
-        if (isOwned())
+        if (IsCurrentColorOwned())
         {
-            mText.text = "Owned";
+            mText.text = textUI[2];
         }
         else
         {
-            mText.text = "Cost: 200";
+            mText.text = textUI[3];
         }
     }
-    void AddNewColor()
+    void GoToCreateNewColor()
     {
         Shop.SetActive(false);
         CreatingNew.SetActive(true);
 
-        r.GetComponent<Scrollbar>().value = (float)AuthScript.instance.user.CurrentColor[0] / 255;
-        g.GetComponent<Scrollbar>().value = (float)AuthScript.instance.user.CurrentColor[1] / 255;
-        b.GetComponent<Scrollbar>().value = (float)AuthScript.instance.user.CurrentColor[2] / 255;
+        r.GetComponent<Scrollbar>().value = (float)AuthScript.instance.GetUser().GetCurrent()[0] / 255;
+        g.GetComponent<Scrollbar>().value = (float)AuthScript.instance.GetUser().GetCurrent()[1] / 255;
+        b.GetComponent<Scrollbar>().value = (float)AuthScript.instance.GetUser().GetCurrent()[2] / 255;
 
         isCreating = true;
     }
-    void CreateNewColor()
+    void AddNewColorToDB()
     {
-        AuthScript.instance.user.AddColor(new List<int> { rn, gn, bn, 150 });
+        AuthScript.instance.GetUser().AddColor(new List<int> { rn, gn, bn, 150 });
 
-        UpdateUser(AuthScript.instance.user);
+        UpdateUser(AuthScript.instance.GetUser());
 
         lastP += 4;
         place = lastP;
 
-        Back();
+        BackToMainPage();
     }
-    void Buy()
+    void BuyColor()
     {
-        if (AuthScript.instance.user.coins >= 200 & !isOwned())
+        if (AuthScript.instance.GetUser().GetCoins() >= costOfColor & !IsCurrentColorOwned())
         {
-            AuthScript.instance.user.coins -= 200;
-            AuthScript.instance.user.AddToOwn(new List<int> {
-                AuthScript.instance.user.OptionalColors[place],
-                AuthScript.instance.user.OptionalColors[place + 1],
-                AuthScript.instance.user.OptionalColors[place + 2],
-                AuthScript.instance.user.OptionalColors[place + 3] });
+            AuthScript.instance.GetUser().ChangeCoins(costOfColor * -1);
+            AuthScript.instance.GetUser().AddToOwn(new List<int> {
+                AuthScript.instance.GetUser().GetOptional()[place],
+                AuthScript.instance.GetUser().GetOptional()[place + 1],
+                AuthScript.instance.GetUser().GetOptional()[place + 2],
+                AuthScript.instance.GetUser().GetOptional()[place + 3] });
 
-            UpdateUser(AuthScript.instance.user);
+            UpdateUser(AuthScript.instance.GetUser());
 
             SetCoins();
 
-            OnChange();
+            UpdateIfOwned();
         }
     }
-    bool isUsing()
+    bool IsCurrentColorUsed()
     {
-        return (isOwned()
-            && AuthScript.instance.user.CurrentColor[0] == AuthScript.instance.user.OptionalColors[place]
-            && AuthScript.instance.user.CurrentColor[1] == AuthScript.instance.user.OptionalColors[place + 1]
-            && AuthScript.instance.user.CurrentColor[2] == AuthScript.instance.user.OptionalColors[place + 2]
-            && AuthScript.instance.user.CurrentColor[3] == AuthScript.instance.user.OptionalColors[place + 3]);
+        return (IsCurrentColorOwned()
+            && AuthScript.instance.GetUser().GetCurrent()[0] == AuthScript.instance.GetUser().GetOptional()[place]
+            && AuthScript.instance.GetUser().GetCurrent()[1] == AuthScript.instance.GetUser().GetOptional()[place + 1]
+            && AuthScript.instance.GetUser().GetCurrent()[2] == AuthScript.instance.GetUser().GetOptional()[place + 2]
+            && AuthScript.instance.GetUser().GetCurrent()[3] == AuthScript.instance.GetUser().GetOptional()[place + 3]);
     }
-    void Use()
+    void UseCurrentColor()
     {
-        if (isOwned())
+        if (IsCurrentColorOwned())
         {
             for (int i = 0; i < 4; i++)
             {
-                AuthScript.instance.user.CurrentColor[i] = AuthScript.instance.user.OptionalColors[place + i];
+                AuthScript.instance.GetUser().GetCurrent()[i] = AuthScript.instance.GetUser().GetOptional()[place + i];
             }
-            AuthScript.instance.user.CurrentColor[4] = place;
+            AuthScript.instance.GetUser().SetCurrentPlace(place);
 
-            UpdateUser(AuthScript.instance.user);
+            UpdateUser(AuthScript.instance.GetUser());
 
-            isUsed.text = "using";
+            isUsed.text = textUI[1];
         }
     }
-    public void Back()
+    void BackToMainPage()
     {
         Shop.SetActive(true);
         CreatingNew.SetActive(false);
         isCreating = false;
 
         mat.SetColor("_Color", new Color(
-                 AuthScript.instance.user.OptionalColors[place],
-                 AuthScript.instance.user.OptionalColors[place + 1],
-                 AuthScript.instance.user.OptionalColors[place + 2],
-                 AuthScript.instance.user.OptionalColors[place + 3]));
-        OnChange();
-    }
-    public void StartGame()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("SampleScene");
+                 AuthScript.instance.GetUser().GetOptional()[place],
+                 AuthScript.instance.GetUser().GetOptional()[place + 1],
+                 AuthScript.instance.GetUser().GetOptional()[place + 2],
+                 AuthScript.instance.GetUser().GetOptional()[place + 3]));
+        UpdateIfOwned();
     }
     void SetCoins()
     {
-        totalCoins.text = AuthScript.instance.user.coins.ToString();
+        totalCoins.text = AuthScript.instance.GetUser().GetCoins().ToString();
     }
-    bool isOwned()
+    bool IsCurrentColorOwned()
     {
-        for (int i = 1; i < AuthScript.instance.user.OwnColors.Count; i += 4)
+        for (int i = 1; i < AuthScript.instance.GetUser().GetOwned().Count; i += 4)
         {
-            if (AuthScript.instance.user.OptionalColors[place] == AuthScript.instance.user.OwnColors[i]
-                && AuthScript.instance.user.OptionalColors[place + 1] == AuthScript.instance.user.OwnColors[i + 1]
-                && AuthScript.instance.user.OptionalColors[place + 2] == AuthScript.instance.user.OwnColors[i + 2]
-                && AuthScript.instance.user.OptionalColors[place + 3] == AuthScript.instance.user.OwnColors[i + 3])
+            if (AuthScript.instance.GetUser().GetOptional()[place] == AuthScript.instance.GetUser().GetOwned()[i]
+                && AuthScript.instance.GetUser().GetOptional()[place + 1] == AuthScript.instance.GetUser().GetOwned()[i + 1]
+                && AuthScript.instance.GetUser().GetOptional()[place + 2] == AuthScript.instance.GetUser().GetOwned()[i + 2]
+                && AuthScript.instance.GetUser().GetOptional()[place + 3] == AuthScript.instance.GetUser().GetOwned()[i + 3])
             {
                 return true;
             }
@@ -214,9 +220,14 @@ public class ColorChange : MonoBehaviour
         string json = JsonUtility.ToJson(user);
         reference.SetRawJsonValueAsync(json);
     }
-    public void GoToLeaderBoard()
+    void GoToLeaderBoard()
     {
         SceneManager.LoadScene("LeaderBoard");
+    }
+    void StartGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("SampleScene");
     }
 }
 

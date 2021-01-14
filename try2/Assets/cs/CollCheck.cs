@@ -8,6 +8,8 @@ public class CollCheck : MonoBehaviour
     public static bool HasLost;
     public GameObject DeathPanel;
     public GameObject GamePanel;
+    double topOfTrain, topOfCrate;
+    string trainCloneName, crateCloneName;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,7 +19,7 @@ public class CollCheck : MonoBehaviour
     void Update()
     {
         //waiting untill the death animation ends
-        if (Animations.booliann)
+        if (Animations.deathAnimationFinished)
         {
             Time.timeScale = 0f;
             DeathPanel.SetActive(true);
@@ -27,20 +29,22 @@ public class CollCheck : MonoBehaviour
     //checking for collisions
     private void OnCollisionEnter(Collision col)
     {
-        if ((col.gameObject.name == "Train(Clone)" && transform.position.y <= 0.69))
+        if ((col.gameObject.name == trainCloneName && transform.position.y <= topOfTrain))
         {
             HasLost = true;
-            print("true");
         }
-        if (col.gameObject.name == "Crate(Clone)" && transform.position.y <= 0.41)
+        if (col.gameObject.name == crateCloneName && transform.position.y <= topOfCrate)
         {
             HasLost = true;
-            print("true");
         }
     }
     //function that sets the starting values of the objects
     void UpdateVer()
     {
         HasLost = false;
+        topOfCrate = 0.41;
+        topOfTrain = 0.69;
+        trainCloneName = "Train(Clone)";
+        crateCloneName = "Crate(Clone)";
     }
 }

@@ -17,23 +17,18 @@ public class PauseMenu : MonoBehaviour
     bool startCount, isGO;
     Text CountDownText;
     Transform TextTR;
+    string goText;
     // Update is called once per frame
     void Start()
     {
         UpdateVer();
-        //if (isFirst)
-        //{
-        //    Time.timeScale = 1f;
-        //    GamePanelUI.SetActive(true);
-        //    BeforeStartPanel.SetActive(false);
-        //}
     }
     void Update()
     {
-        TheCount();
+        UpdatingPauseCountDown();
     }
     //Resuming the game
-    public void StartResumeCount()
+    void StartResumeCount()
     {
         countDown = (float)Math.Round(Time.time, 4) + 0.0004f - (int)(Time.time % 0.001);
         startCount = true;
@@ -42,7 +37,7 @@ public class PauseMenu : MonoBehaviour
         GamePanelUI.SetActive(true);
     }
     //Pausing the game
-    public void Pause()
+    void Pause()
     {
         if (!CollCheck.HasLost)
         {
@@ -52,7 +47,7 @@ public class PauseMenu : MonoBehaviour
             IsPaused = true;
         }
     }
-    void TheCount()
+    void UpdatingPauseCountDown()
     {
         if (startCount)
         {
@@ -68,9 +63,10 @@ public class PauseMenu : MonoBehaviour
                 countGo = Time.time + 1.5f;
                 isGO = true;
             }
+
             if (Time.time <= countGo)
             {
-                CountDownText.text = "GO!";
+                CountDownText.text = goText;
             }
             else
             {
@@ -89,13 +85,14 @@ public class PauseMenu : MonoBehaviour
         startCount = isGO = false;
         TextTR = ResumeCountDownPanel.transform.Find("ResumeCountDown");
         CountDownText = TextTR.GetComponent<Text>();
+        goText = "GO!";
     }
-    public void Shop()
+    void Shop()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("Shop");
     }
-    public void GoToLeaderBoard()
+    void GoToLeaderBoard()
     {
         SceneManager.LoadScene("LeaderBoard");
     }

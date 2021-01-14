@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class BackGroundSpawns : MonoBehaviour
 {
-    public bool exit;
-    public float acceleration;
+    bool exit;
+    float acceleration;
     // Start is called before the first frame update
     void Start()
     {

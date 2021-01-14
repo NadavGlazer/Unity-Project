@@ -6,9 +6,9 @@ using UnityEngine;
 public class Animations : MonoBehaviour
 {
     private Animator animator;
-    public bool left, right, isGrounded, Fjump, SJump, hasLost, first;
-    public int frameCount;
-    public static bool booliann, slideDown;
+    bool left, right, isGrounded, Fjump, SJump, hasLost, first;
+    int frameCount;
+    public static bool deathAnimationFinished, slideDown;
     float timeSince;
     // Start is called before the first frame update
     void Start()
@@ -49,12 +49,12 @@ public class Animations : MonoBehaviour
                 first = true;
             }
 
-            CheckThings();
+            UpdateAnimation();
         }
         if (hasLost)
         {
             right = left = SJump = Fjump = slideDown = false;
-            if (!booliann && frameCount < 200)
+            if (!deathAnimationFinished && frameCount < 200)
             {
                 animator.SetBool("HasLost", true);
                 frameCount++;
@@ -62,12 +62,12 @@ public class Animations : MonoBehaviour
             if (frameCount >= 200)
             {
                 animator.SetBool("HasLost", false);
-                booliann = true;
+                deathAnimationFinished = true;
             }
         }
     }
     //animating the player
-    void CheckThings()
+    void UpdateAnimation()
     {
         if (left)
         {
@@ -124,7 +124,7 @@ public class Animations : MonoBehaviour
     void UpdateVer()
     {
         animator = GetComponent<Animator>();
-        booliann = slideDown = false;
+        deathAnimationFinished = slideDown = false;
         first = true;
         frameCount = 0;
         timeSince = 0;
