@@ -12,9 +12,15 @@ public class AuthScript : MonoBehaviour
 {
     Firebase.Auth.FirebaseAuth auth;
     DatabaseReference reference;
-    public InputField email;
-    public InputField password;
-    public Text errortext;
+    public InputField SignInEmail;
+    public InputField RegisterEmail;
+    public InputField RegisterPassword;
+    public InputField SignInPassword;
+    public InputField NewName;
+    public Text errortextSign;
+    public Text errortextRegister;
+    public GameObject RegisterP;
+    public GameObject SignInP;
     bool moveScene;
     public static CurrentUser instance;
     public static LeaderBoard[] leaderBoards;
@@ -24,7 +30,6 @@ public class AuthScript : MonoBehaviour
         auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         reference = FirebaseDatabase.DefaultInstance.RootReference;
         moveScene = false;
-
         leaderBoards = new LeaderBoard[10];
         FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").GetValueAsync().ContinueWith(task =>
         {
@@ -45,12 +50,35 @@ public class AuthScript : MonoBehaviour
                 }
             }
         });
+
+        FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard")
+     .ValueChanged += HandleValueChanged;
     }
+    void HandleValueChanged(object sender, ValueChangedEventArgs args)
+    {
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message);
+            return;
+        }
+        leaderBoards[0] = new LeaderBoard(0, "temp", "0");
+        while (leaderBoards[0].GetScore() == 0)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                leaderBoards[i] = new LeaderBoard(int.Parse(args.Snapshot.Child((i + 1).ToString()).Child("score").Value.ToString()), args.Snapshot.Child((i + 1).ToString()).Child("name").Value.ToString(), args.Snapshot.Child((i + 1).ToString()).Child("ID").Value.ToString());
+            }
+        }
+        print(1);
+        LeaderBoardCS.HasChanged = true;
+    }
+
 
     // Update is called once per frame
     void Update()
     {
-        errortext.SetAllDirty();
+        errortextSign.SetAllDirty();
+        errortextRegister.SetAllDirty();
         if (moveScene)
         {
             SceneManager.LoadScene("Main Menu");
@@ -58,17 +86,17 @@ public class AuthScript : MonoBehaviour
     }
     void Register()
     {
-        auth.CreateUserWithEmailAndPasswordAsync(email.text.ToString(), password.text.ToString()).ContinueWith(task =>
+        auth.CreateUserWithEmailAndPasswordAsync(RegisterEmail.text.ToString(), RegisterPassword.text.ToString()).ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
-                errortext.text = "Register isn`t successfully";
+                errortextRegister.text = "Register isn`t successfull";
 
                 return;
             }
             if (task.IsFaulted)
             {
-                errortext.text = "Register isn`t successfully";
+                errortextRegister.text = "Register isn`t successfull";
                 return;
             }
 
@@ -76,61 +104,61 @@ public class AuthScript : MonoBehaviour
             Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
             reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
 
-            writeNewUserInDb(auth.CurrentUser.UserId, email.text.ToString().Substring(0, email.text.ToString().IndexOf("@")));
+            writeNewUserInDb(auth.CurrentUser.UserId, NewName.text.ToString());
             moveScene = true;
         });
     }
     void SignIn()
     {
-        auth.SignInWithEmailAndPasswordAsync(email.text.ToString(), password.text.ToString()).ContinueWith(task1 =>
+        auth.SignInWithEmailAndPasswordAsync(SignInEmail.text.ToString(), SignInPassword.text.ToString()).ContinueWith(task1 =>
         {
             if (task1.IsCanceled)
             {
-                errortext.text = "Sign In isn`t successfully";
+                errortextSign.text = "Sign In isn`t successfull";
                 return;
             }
             if (task1.IsFaulted)
             {
-                errortext.text = "Sign In isn`t successfully";
+                errortextSign.text = "Sign In isn`t successfull";
                 return;
             }
             Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
             reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
             //
             reference.GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
             {
-                if (task.IsFaulted)
-                {
-                    return;
-                }
-                List<int> tempCurrent = new List<int>();
-                List<int> tempOptional = new List<int>();
-                List<int> tempOwned = new List<int>();
-                int tempcoins = 0;
-                int tempBest = 0;
-                string tempName;
-                DataSnapshot snapshot = task.Result;
-                for (int i = 0; i < 5; i++)
-                {
-                    tempCurrent.Add(int.Parse(snapshot.Child("CurrentColor").Child(i.ToString()).Value.ToString()));
-                }
-                for (int i = 0; i < snapshot.Child("OptionalColors").ChildrenCount; i++)
-                {
-                    tempOptional.Add(int.Parse(snapshot.Child("OptionalColors").Child(i.ToString()).Value.ToString()));
-                }
-                for (int i = 0; i < snapshot.Child("OwnColors").ChildrenCount; i++)
-                {
-                    tempOwned.Add(int.Parse(snapshot.Child("OwnColors").Child(i.ToString()).Value.ToString()));
-                }
+                return;
+            }
+            List<int> tempCurrent = new List<int>();
+            List<int> tempOptional = new List<int>();
+            List<int> tempOwned = new List<int>();
+            int tempcoins = 0;
+            int tempBest = 0;
+            string tempName;
+            DataSnapshot snapshot = task.Result;
+            for (int i = 0; i < 5; i++)
+            {
+                tempCurrent.Add(int.Parse(snapshot.Child("CurrentColor").Child(i.ToString()).Value.ToString()));
+            }
+            for (int i = 0; i < snapshot.Child("OptionalColors").ChildrenCount; i++)
+            {
+                tempOptional.Add(int.Parse(snapshot.Child("OptionalColors").Child(i.ToString()).Value.ToString()));
+            }
+            for (int i = 0; i < snapshot.Child("OwnColors").ChildrenCount; i++)
+            {
+                tempOwned.Add(int.Parse(snapshot.Child("OwnColors").Child(i.ToString()).Value.ToString()));
+            }
 
-                tempcoins = int.Parse(snapshot.Child("coins").Value.ToString());
-                tempBest = int.Parse(snapshot.Child("bestScore").Value.ToString());
-                tempName = snapshot.Child("name").Value.ToString();
+            tempcoins = int.Parse(snapshot.Child("coins").Value.ToString());
+            tempBest = int.Parse(snapshot.Child("bestScore").Value.ToString());
+            tempName = snapshot.Child("name").Value.ToString();
 
-                User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, email.text.ToString().Substring(0, email.text.ToString().IndexOf("@")));
-                instance = new CurrentUser(temp, auth.CurrentUser.UserId);
-                moveScene = true;
-            });
+            User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, tempName);
+            instance = new CurrentUser(temp, auth.CurrentUser.UserId);
+            moveScene = true;
+        });
         });
     }
     void writeNewUserInDb(string id, string name)
@@ -145,6 +173,16 @@ public class AuthScript : MonoBehaviour
         reference.SetRawJsonValueAsync(json);
 
         instance = new CurrentUser(user, id);
+    }
+    void GoToCreateNewUser()
+    {
+        RegisterP.SetActive(true);
+        SignInP.SetActive(false);
+    }
+    void GoToSignIn()
+    {
+        RegisterP.SetActive(false);
+        SignInP.SetActive(true);
     }
 }
 public class User

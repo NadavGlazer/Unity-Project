@@ -17,10 +17,18 @@ public class LeaderBoardCS : MonoBehaviour
     public Text place9;
     public Text place10;
     public Text bestScore;
+    public static bool HasChanged;
     // Start is called before the first frame update
     void Start()
     {
         SetBoldPlayerScores();
+        SetLeaderBoards();
+
+        bestScore.text = "score: " + AuthScript.instance.GetUser().GetBestScore();
+        HasChanged = false;
+    }
+    void SetLeaderBoards()
+    {
         place1.text = "1. name: " + AuthScript.leaderBoards[0].GetName().ToString() + " score: " + AuthScript.leaderBoards[0].GetScore();
         place2.text = "2. name: " + AuthScript.leaderBoards[1].GetName().ToString() + " score: " + AuthScript.leaderBoards[1].GetScore();
         place3.text = "3. name: " + AuthScript.leaderBoards[2].GetName().ToString() + " score: " + AuthScript.leaderBoards[2].GetScore();
@@ -31,8 +39,14 @@ public class LeaderBoardCS : MonoBehaviour
         place8.text = "8. name: " + AuthScript.leaderBoards[7].GetName().ToString() + " score: " + AuthScript.leaderBoards[7].GetScore();
         place9.text = "9. name: " + AuthScript.leaderBoards[8].GetName().ToString() + " score: " + AuthScript.leaderBoards[8].GetScore();
         place10.text = "10. name: " + AuthScript.leaderBoards[9].GetName().ToString() + " score: " + AuthScript.leaderBoards[9].GetScore();
-
-        bestScore.text = "score: " + AuthScript.instance.GetUser().GetBestScore();
+    }
+    void Update()
+    {
+        if (HasChanged)
+        {
+            SetLeaderBoards();
+            HasChanged = false;
+        }
     }
     void GoToShop()
     {

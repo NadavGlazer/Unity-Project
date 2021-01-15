@@ -62,11 +62,11 @@ public class ObstacleSpawner : MonoBehaviour
                 }
                 if (Time.time < 15f)
                 {
-                    nextSpawn = Time.time + 4f;
+                    nextSpawn = Time.time + 4.5f;
                 }
                 else if (Time.time < 30f)
                 {
-                    nextSpawn = Time.time + 3.2f;
+                    nextSpawn = Time.time + 3.4f;
                 }
                 else
                 {
