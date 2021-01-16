@@ -19,6 +19,8 @@ public class ColorChange : MonoBehaviour
     public GameObject Shop;
     public GameObject CreatingNew;
     public Text totalCoins;
+    public GameObject BuyButton;
+    public GameObject UseButton;
     bool isCreating;
     int rn, gn, bn, placeChange;
     public Text isUsed;
@@ -75,10 +77,12 @@ public class ColorChange : MonoBehaviour
             if (IsCurrentColorUsed())
             {
                 isUsed.text = textUI[1];
+                UseButton.SetActive(false);
             }
             else
             {
                 isUsed.text = textUI[0];
+                UseButton.SetActive(true);
             }
             UpdateIfOwned();
             mat.SetColor("_Color", new Color32(
@@ -115,10 +119,12 @@ public class ColorChange : MonoBehaviour
         if (IsCurrentColorOwned())
         {
             mText.text = textUI[2];
+            BuyButton.SetActive(false);
         }
         else
         {
             mText.text = textUI[3];
+            BuyButton.SetActive(true);
         }
     }
     void GoToCreateNewColor()

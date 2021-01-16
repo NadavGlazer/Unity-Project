@@ -841,13 +841,13 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 735789185}
   m_TextComponent: {fileID: 1417096129}
   m_Placeholder: {fileID: 1822812294}
-  m_ContentType: 0
+  m_ContentType: 6
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 7
   m_LineType: 0
   m_HideMobileInput: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 5
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
@@ -982,13 +982,13 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 928680473}
   m_TextComponent: {fileID: 1239102310}
   m_Placeholder: {fileID: 1786964909}
-  m_ContentType: 0
+  m_ContentType: 6
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 7
   m_LineType: 0
   m_HideMobileInput: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 5
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
@@ -1123,8 +1123,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 949682509}
   m_TextComponent: {fileID: 1944331039}
   m_Placeholder: {fileID: 1730784677}
-  m_ContentType: 0
-  m_InputType: 0
+  m_ContentType: 7
+  m_InputType: 2
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0
@@ -2426,8 +2426,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1797967603}
   m_TextComponent: {fileID: 1771647816}
   m_Placeholder: {fileID: 463689556}
-  m_ContentType: 0
-  m_InputType: 0
+  m_ContentType: 7
+  m_InputType: 2
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0
@@ -2442,7 +2442,7 @@ MonoBehaviour:
       m_Calls: []
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
-  m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
+  m_SelectionColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_Text: 
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
@@ -3170,7 +3170,7 @@ MonoBehaviour:
   m_LineType: 0
   m_HideMobileInput: 0
   m_CharacterValidation: 0
-  m_CharacterLimit: 0
+  m_CharacterLimit: 12
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []

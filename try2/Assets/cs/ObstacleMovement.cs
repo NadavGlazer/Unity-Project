@@ -47,7 +47,7 @@ public class ObstacleMovement : MonoBehaviour
                     }
                 }
 
-                if (transform.GetComponent<Transform>().position.z < 7.5f && transform.name == trainCloneName)
+                if (transform.GetComponent<Transform>().position.z < 8f && transform.name == trainCloneName)
                 {
                     ObstacleSpawner.spawn = true;
                 }

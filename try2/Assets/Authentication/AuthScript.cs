@@ -24,7 +24,7 @@ public class AuthScript : MonoBehaviour
     bool moveScene;
     public static CurrentUser instance;
     public static LeaderBoard[] leaderBoards;
-    string signInError, registerError, nameLengthError;
+    string signInError, registerError;
     // Start is called before the first frame update
     void Start()
     {
@@ -56,7 +56,6 @@ public class AuthScript : MonoBehaviour
      .ValueChanged += HandleValueChanged;
         signInError = "Sign In isn`t successfull";
         registerError = "Register isn`t successfull";
-        nameLengthError = "UserName length must be shorter then 10";
         errortextSign.text = "";
         errortextRegister.text = "";
     }
@@ -91,9 +90,8 @@ public class AuthScript : MonoBehaviour
     }
     void Register()
     {
-        if (NewName.text.Length < 10 && NewName.text.Length > 0)
-        {
-            auth.CreateUserWithEmailAndPasswordAsync(RegisterEmail.text.ToString(), RegisterPassword.text.ToString()).ContinueWith(task =>
+
+        auth.CreateUserWithEmailAndPasswordAsync(RegisterEmail.text.ToString(), RegisterPassword.text.ToString()).ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
@@ -115,11 +113,7 @@ public class AuthScript : MonoBehaviour
             writeNewUserInDb(auth.CurrentUser.UserId, NewName.text.ToString());
             moveScene = true;
         });
-        }
-        else
-        {
-            errortextRegister.text = nameLengthError;
-        }
+
     }
     void SignIn()
     {
@@ -139,39 +133,39 @@ public class AuthScript : MonoBehaviour
             reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
             //
             reference.GetValueAsync().ContinueWith(task =>
-        {
-            if (task.IsFaulted)
             {
-                return;
-            }
-            List<int> tempCurrent = new List<int>();
-            List<int> tempOptional = new List<int>();
-            List<int> tempOwned = new List<int>();
-            int tempcoins = 0;
-            int tempBest = 0;
-            string tempName;
-            DataSnapshot snapshot = task.Result;
-            for (int i = 0; i < 5; i++)
-            {
-                tempCurrent.Add(int.Parse(snapshot.Child("CurrentColor").Child(i.ToString()).Value.ToString()));
-            }
-            for (int i = 0; i < snapshot.Child("OptionalColors").ChildrenCount; i++)
-            {
-                tempOptional.Add(int.Parse(snapshot.Child("OptionalColors").Child(i.ToString()).Value.ToString()));
-            }
-            for (int i = 0; i < snapshot.Child("OwnColors").ChildrenCount; i++)
-            {
-                tempOwned.Add(int.Parse(snapshot.Child("OwnColors").Child(i.ToString()).Value.ToString()));
-            }
+                if (task.IsFaulted)
+                {
+                    return;
+                }
+                List<int> tempCurrent = new List<int>();
+                List<int> tempOptional = new List<int>();
+                List<int> tempOwned = new List<int>();
+                int tempcoins = 0;
+                int tempBest = 0;
+                string tempName;
+                DataSnapshot snapshot = task.Result;
+                for (int i = 0; i < 5; i++)
+                {
+                    tempCurrent.Add(int.Parse(snapshot.Child("CurrentColor").Child(i.ToString()).Value.ToString()));
+                }
+                for (int i = 0; i < snapshot.Child("OptionalColors").ChildrenCount; i++)
+                {
+                    tempOptional.Add(int.Parse(snapshot.Child("OptionalColors").Child(i.ToString()).Value.ToString()));
+                }
+                for (int i = 0; i < snapshot.Child("OwnColors").ChildrenCount; i++)
+                {
+                    tempOwned.Add(int.Parse(snapshot.Child("OwnColors").Child(i.ToString()).Value.ToString()));
+                }
 
-            tempcoins = int.Parse(snapshot.Child("coins").Value.ToString());
-            tempBest = int.Parse(snapshot.Child("bestScore").Value.ToString());
-            tempName = snapshot.Child("name").Value.ToString();
+                tempcoins = int.Parse(snapshot.Child("coins").Value.ToString());
+                tempBest = int.Parse(snapshot.Child("bestScore").Value.ToString());
+                tempName = snapshot.Child("name").Value.ToString();
 
-            User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, tempName);
-            instance = new CurrentUser(temp, auth.CurrentUser.UserId);
-            moveScene = true;
-        });
+                User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, tempName);
+                instance = new CurrentUser(temp, auth.CurrentUser.UserId);
+                moveScene = true;
+            });
         });
     }
     void writeNewUserInDb(string id, string name)
@@ -202,6 +196,18 @@ public class AuthScript : MonoBehaviour
         RegisterPassword.text = "";
         NewName.text = "";
     }
+    //void ShowPassword()
+    //{
+    //    if (SignInPassword.InputField.ContentType == InputField.ContentType.Password)
+    //    {
+    //        SignInPassword.inputType.ContentType = InputField.ContentType.Standard;
+    //    }
+    //    else
+    //    {
+    //        SignInPassword.inputType.ContentType = InputField.ContentType.Password;
+    //    }
+    //    SignInPassword.ForceLabelUpdate();
+    //}
 }
 public class User
 {

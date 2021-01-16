@@ -5432,6 +5432,8 @@ MonoBehaviour:
   Shop: {fileID: 187949026}
   CreatingNew: {fileID: 1086208467}
   totalCoins: {fileID: 1554804572}
+  BuyButton: {fileID: 2043058200}
+  UseButton: {fileID: 1668374887}
   isUsed: {fileID: 1221734092}
 --- !u!1 &6136935972296714657
 GameObject:
