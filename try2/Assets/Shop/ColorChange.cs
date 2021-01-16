@@ -235,6 +235,10 @@ public class ColorChange : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene("SampleScene");
     }
+    void GoToMenu()
+    {
+        SceneManager.LoadScene("Main Menu");
+    }
 }
 
 
