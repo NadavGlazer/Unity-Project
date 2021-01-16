@@ -132,21 +132,27 @@ public class ColorChange : MonoBehaviour
         Shop.SetActive(false);
         CreatingNew.SetActive(true);
 
-        r.GetComponent<Scrollbar>().value = (float)AuthScript.instance.GetUser().GetCurrent()[0] / 255;
-        g.GetComponent<Scrollbar>().value = (float)AuthScript.instance.GetUser().GetCurrent()[1] / 255;
-        b.GetComponent<Scrollbar>().value = (float)AuthScript.instance.GetUser().GetCurrent()[2] / 255;
+        r.GetComponent<Scrollbar>().value = (float)AuthScript.instance.GetUser().GetOptional()[place] / 255;
+        g.GetComponent<Scrollbar>().value = (float)AuthScript.instance.GetUser().GetOptional()[place + 1] / 255;
+        b.GetComponent<Scrollbar>().value = (float)AuthScript.instance.GetUser().GetOptional()[place + 2] / 255;
 
         isCreating = true;
     }
     void AddNewColorToDB()
     {
-        AuthScript.instance.GetUser().AddColor(new List<int> { rn, gn, bn, 150 });
+        if (IsColorOptional(new List<int> { rn, gn, bn, 150 }) == -1)
+        {
+            AuthScript.instance.GetUser().AddColor(new List<int> { rn, gn, bn, 150 });
 
-        UpdateUser(AuthScript.instance.GetUser());
+            UpdateUser(AuthScript.instance.GetUser());
 
-        lastP += 4;
-        place = lastP;
-
+            lastP += 4;
+            place = lastP;
+        }
+        else
+        {
+            place = IsColorOptional(new List<int> { rn, gn, bn, 150 });
+        }
         BackToMainPage();
     }
     void BuyColor()
@@ -220,6 +226,20 @@ public class ColorChange : MonoBehaviour
             }
         }
         return false;
+    }
+    int IsColorOptional(List<int> color)
+    {
+        for (int i = 1; i < AuthScript.instance.GetUser().GetOptional().Count; i += 4)
+        {
+            if (color[0] == AuthScript.instance.GetUser().GetOptional()[i]
+               && color[1] == AuthScript.instance.GetUser().GetOptional()[i + 1]
+               && color[2] == AuthScript.instance.GetUser().GetOptional()[i + 2]
+               && color[3] == AuthScript.instance.GetUser().GetOptional()[i + 3])
+            {
+                return i;
+            }
+        }
+        return -1;
     }
     void UpdateUser(User user)
     {
