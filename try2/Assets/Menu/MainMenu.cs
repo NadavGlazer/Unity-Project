@@ -10,6 +10,9 @@ using Firebase.Unity;
 public class MainMenu : MonoBehaviour
 {
     public Text coinsTxt;
+    public GameObject MainMenuPanel;
+    public GameObject SettingsPanel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,5 +33,20 @@ public class MainMenu : MonoBehaviour
     void GoToLeaderBoard()
     {
         SceneManager.LoadScene("LeaderBoard");
+    }
+    void GoToSetting()
+    {
+        MainMenuPanel.SetActive(false);
+        SettingsPanel.SetActive(true);
+    }
+    void GoToMainMenu()
+    {
+        MainMenuPanel.SetActive(true);
+        SettingsPanel.SetActive(false);
+    }
+    void LogOut()
+    {
+        Firebase.Auth.FirebaseAuth.DefaultInstance.SignOut();
+        SceneManager.LoadScene("Authentication");
     }
 }

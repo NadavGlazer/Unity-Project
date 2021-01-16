@@ -51,7 +51,6 @@ public class AuthScript : MonoBehaviour
                 }
             }
         });
-
         FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard")
      .ValueChanged += HandleValueChanged;
         signInError = "Sign In isn`t successfull";
@@ -196,18 +195,30 @@ public class AuthScript : MonoBehaviour
         RegisterPassword.text = "";
         NewName.text = "";
     }
-    //void ShowPassword()
-    //{
-    //    if (SignInPassword.InputField.ContentType == InputField.ContentType.Password)
-    //    {
-    //        SignInPassword.inputType.ContentType = InputField.ContentType.Standard;
-    //    }
-    //    else
-    //    {
-    //        SignInPassword.inputType.ContentType = InputField.ContentType.Password;
-    //    }
-    //    SignInPassword.ForceLabelUpdate();
-    //}
+    void ShowSignInPassword()
+    {
+        if (SignInPassword.contentType == InputField.ContentType.Password)
+        {
+            SignInPassword.contentType = InputField.ContentType.Standard;
+        }
+        else
+        {
+            SignInPassword.contentType = InputField.ContentType.Password;
+        }
+        SignInPassword.ForceLabelUpdate();
+    }
+    void ShowRegisterPassword()
+    {
+        if (RegisterPassword.contentType == InputField.ContentType.Password)
+        {
+            RegisterPassword.contentType = InputField.ContentType.Standard;
+        }
+        else
+        {
+            RegisterPassword.contentType = InputField.ContentType.Password;
+        }
+        RegisterPassword.ForceLabelUpdate();
+    }
 }
 public class User
 {
