@@ -24,6 +24,7 @@ public class AuthScript : MonoBehaviour
     bool moveScene;
     public static CurrentUser instance;
     public static LeaderBoard[] leaderBoards;
+    string signInError, registerError, nameLengthError;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,6 +54,11 @@ public class AuthScript : MonoBehaviour
 
         FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard")
      .ValueChanged += HandleValueChanged;
+        signInError = "Sign In isn`t successfull";
+        registerError = "Register isn`t successfull";
+        nameLengthError = "UserName length must be shorter then 10";
+        errortextSign.text = "";
+        errortextRegister.text = "";
     }
     void HandleValueChanged(object sender, ValueChangedEventArgs args)
     {
@@ -69,7 +75,6 @@ public class AuthScript : MonoBehaviour
                 leaderBoards[i] = new LeaderBoard(int.Parse(args.Snapshot.Child((i + 1).ToString()).Child("score").Value.ToString()), args.Snapshot.Child((i + 1).ToString()).Child("name").Value.ToString(), args.Snapshot.Child((i + 1).ToString()).Child("ID").Value.ToString());
             }
         }
-        print(1);
         LeaderBoardCS.HasChanged = true;
     }
 
@@ -86,27 +91,35 @@ public class AuthScript : MonoBehaviour
     }
     void Register()
     {
-        auth.CreateUserWithEmailAndPasswordAsync(RegisterEmail.text.ToString(), RegisterPassword.text.ToString()).ContinueWith(task =>
+        if (NewName.text.Length < 10 && NewName.text.Length > 0)
+        {
+            auth.CreateUserWithEmailAndPasswordAsync(RegisterEmail.text.ToString(), RegisterPassword.text.ToString()).ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
-                errortextRegister.text = "Register isn`t successfull";
+                errortextRegister.text = registerError;
 
                 return;
             }
             if (task.IsFaulted)
             {
-                errortextRegister.text = "Register isn`t successfull";
+                errortextRegister.text = registerError;
                 return;
             }
 
             // Firebase user has been created.
+
             Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
             reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
 
             writeNewUserInDb(auth.CurrentUser.UserId, NewName.text.ToString());
             moveScene = true;
         });
+        }
+        else
+        {
+            errortextRegister.text = nameLengthError;
+        }
     }
     void SignIn()
     {
@@ -114,12 +127,12 @@ public class AuthScript : MonoBehaviour
         {
             if (task1.IsCanceled)
             {
-                errortextSign.text = "Sign In isn`t successfull";
+                errortextSign.text = signInError;
                 return;
             }
             if (task1.IsFaulted)
             {
-                errortextSign.text = "Sign In isn`t successfull";
+                errortextSign.text = signInError;
                 return;
             }
             Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
@@ -178,11 +191,16 @@ public class AuthScript : MonoBehaviour
     {
         RegisterP.SetActive(true);
         SignInP.SetActive(false);
+        SignInEmail.text = "";
+        SignInPassword.text = "";
     }
     void GoToSignIn()
     {
         RegisterP.SetActive(false);
         SignInP.SetActive(true);
+        RegisterEmail.text = "";
+        RegisterPassword.text = "";
+        NewName.text = "";
     }
 }
 public class User

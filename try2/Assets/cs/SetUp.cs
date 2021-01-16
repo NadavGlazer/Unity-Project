@@ -12,8 +12,7 @@ public class SetUp : MonoBehaviour
     public static int frames;
     public static float totalAcceleration, totalRun;
     float accBefore, timeWP, maxACC, sPlaceStartZ;
-    bool[] secCheck;
-    bool jump, hasJumped, happend;
+    bool jump;
     string thePlaceName, theSPlaceName;
     int fPlaceEndPos, sPlaceEndPos;
     void Start()
@@ -33,19 +32,7 @@ public class SetUp : MonoBehaviour
     {
         if (!CollCheck.HasLost)
         {
-            if (PauseMenu.IsPaused && !happend)
-            {
-                happend = true;
-            }
-            if (happend && !PauseMenu.IsPaused)
-            {
-                happend = false;
-                totalAcceleration = accBefore;
-            }
-            if (!happend && !PauseMenu.IsPaused)
-            {
-                accBefore = totalAcceleration;
-            }
+
             if (!PauseMenu.IsPaused)
             {
                 //updating verables
@@ -57,9 +44,9 @@ public class SetUp : MonoBehaviour
 
                 if (totalAcceleration <= maxACC && frames % 10 == 0)
                 {
-                    totalAcceleration = (totalAcceleration + Time.deltaTime / 60) * Time.timeScale;
+                    totalAcceleration = (totalAcceleration + Time.deltaTime / 40) * Time.timeScale;
                 }
-                if (totalAcceleration > maxACC && frames % 300 == 0)
+                if (totalAcceleration > maxACC && frames % 200 == 0)
                 {
                     totalAcceleration = (totalAcceleration + Time.deltaTime / 60) * Time.timeScale;
                 }
@@ -79,20 +66,14 @@ public class SetUp : MonoBehaviour
             }
         }
     }
-    
+
     //function that sets the starting values of the objects
     void UpdateVer()
     {
         Application.targetFrameRate = 60;
         frames = 1;
         totalAcceleration = 0.01f;
-        secCheck = new bool[1000];
         accBefore = timeWP = totalRun = 0.0f;
-        hasJumped = happend = false;
-        for (int i = 0; i < secCheck.Length; i++)
-        {
-            secCheck[i] = false;
-        }
         maxACC = 0.045f;
         Time.timeScale = 1f;
         thePlaceName = "ThePlace";

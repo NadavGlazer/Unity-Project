@@ -46,6 +46,11 @@ public class ObstacleMovement : MonoBehaviour
                         transform.GetComponent<Transform>().position -= new Vector3(0, 0, acceleration * crateAcc);
                     }
                 }
+
+                if (transform.GetComponent<Transform>().position.z < 7.5f && transform.name == trainCloneName)
+                {
+                    ObstacleSpawner.spawn = true;
+                }
             }
         }
     }
