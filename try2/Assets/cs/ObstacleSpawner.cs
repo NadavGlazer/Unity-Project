@@ -82,8 +82,10 @@ public class ObstacleSpawner : MonoBehaviour
                 {
                     nextSpawn = Time.time + Random.Range(1.0f, 3.0f);
                 }
+
                 spawn = false;
             }
+
         }
     }
     //function that spawn one new  Train object

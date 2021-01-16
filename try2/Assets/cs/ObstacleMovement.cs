@@ -6,10 +6,11 @@ using UnityEngine;
 public class ObstacleMovement : MonoBehaviour
 {
     bool exit;
-    public float acceleration;
+    float acceleration;
     string trainCloneName, crateCloneName;
     int trainZOfDestruction, crateZOfDestruction;
     float trainAcc, crateAcc;
+    bool first;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,14 +47,16 @@ public class ObstacleMovement : MonoBehaviour
                         transform.GetComponent<Transform>().position -= new Vector3(0, 0, acceleration * crateAcc);
                     }
                 }
-
-                if (transform.GetComponent<Transform>().position.z < 8f && transform.name == trainCloneName)
+                if (transform.GetComponent<Transform>().position.z < 7f && transform.name == trainCloneName && first)
                 {
                     ObstacleSpawner.spawn = true;
+                    first = false;
                 }
+
             }
         }
     }
+
     //function that sets the starting values of the objects
     void UpdateVer()
     {
@@ -65,5 +68,6 @@ public class ObstacleMovement : MonoBehaviour
         crateZOfDestruction = -11;
         trainAcc = 1.1f;
         crateAcc = 1f;
+        first = true;
     }
 }
