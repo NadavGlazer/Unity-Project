@@ -12,26 +12,27 @@ public class AuthScript : MonoBehaviour
 {
     Firebase.Auth.FirebaseAuth auth;
     DatabaseReference reference;
-    public InputField SignInEmail;
-    public InputField RegisterEmail;
-    public InputField RegisterPassword;
-    public InputField SignInPassword;
-    public InputField NewName;
+    public InputField signInEmail;
+    public InputField registerEmail;
+    public InputField registerPassword;
+    public InputField signInPassword;
+    public InputField newName;
     public Text errortextSign;
     public Text errortextRegister;
-    public GameObject RegisterP;
-    public GameObject SignInP;
+    public GameObject registerP;
+    public GameObject signInP;
     bool moveScene;
-    public static CurrentUser instance;
-    public static LeaderBoard[] leaderBoards;
-    string signInError, registerError;
+    public static CurrentUser Instance;
+    public static LeaderBoard[] LeaderBoards;
+    string signInError;
+    string registerError;
     // Start is called before the first frame update
     void Start()
     {
         auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         reference = FirebaseDatabase.DefaultInstance.RootReference;
         moveScene = false;
-        leaderBoards = new LeaderBoard[10];
+        LeaderBoards = new LeaderBoard[10];
         FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsFaulted)
@@ -41,12 +42,12 @@ public class AuthScript : MonoBehaviour
             else if (task.IsCompleted)
             {
                 DataSnapshot snapshot = task.Result;
-                leaderBoards[0] = new LeaderBoard(0, "temp", "0");
-                while (leaderBoards[0].GetScore() == 0)
+                LeaderBoards[0] = new LeaderBoard(0, "temp", "0");
+                while (LeaderBoards[0].GetScore() == 0)
                 {
                     for (int i = 0; i < 10; i++)
                     {
-                        leaderBoards[i] = new LeaderBoard(int.Parse(snapshot.Child((i + 1).ToString()).Child("score").Value.ToString()), snapshot.Child((i + 1).ToString()).Child("name").Value.ToString(), snapshot.Child((i + 1).ToString()).Child("ID").Value.ToString());
+                        LeaderBoards[i] = new LeaderBoard(int.Parse(snapshot.Child((i + 1).ToString()).Child("score").Value.ToString()), snapshot.Child((i + 1).ToString()).Child("name").Value.ToString(), snapshot.Child((i + 1).ToString()).Child("ID").Value.ToString());
                     }
                 }
             }
@@ -65,12 +66,12 @@ public class AuthScript : MonoBehaviour
             Debug.LogError(args.DatabaseError.Message);
             return;
         }
-        leaderBoards[0] = new LeaderBoard(0, "temp", "0");
-        while (leaderBoards[0].GetScore() == 0)
+        LeaderBoards[0] = new LeaderBoard(0, "temp", "0");
+        while (LeaderBoards[0].GetScore() == 0)
         {
             for (int i = 0; i < 10; i++)
             {
-                leaderBoards[i] = new LeaderBoard(int.Parse(args.Snapshot.Child((i + 1).ToString()).Child("score").Value.ToString()), args.Snapshot.Child((i + 1).ToString()).Child("name").Value.ToString(), args.Snapshot.Child((i + 1).ToString()).Child("ID").Value.ToString());
+                LeaderBoards[i] = new LeaderBoard(int.Parse(args.Snapshot.Child((i + 1).ToString()).Child("score").Value.ToString()), args.Snapshot.Child((i + 1).ToString()).Child("name").Value.ToString(), args.Snapshot.Child((i + 1).ToString()).Child("ID").Value.ToString());
             }
         }
         LeaderBoardCS.HasChanged = true;
@@ -84,13 +85,13 @@ public class AuthScript : MonoBehaviour
         errortextRegister.SetAllDirty();
         if (moveScene)
         {
-            SceneManager.LoadScene("Main Menu");
+            SceneManager.LoadScene("MainMenu");
         }
     }
     void Register()
     {
 
-        auth.CreateUserWithEmailAndPasswordAsync(RegisterEmail.text.ToString(), RegisterPassword.text.ToString()).ContinueWith(task =>
+        auth.CreateUserWithEmailAndPasswordAsync(registerEmail.text.ToString(), registerPassword.text.ToString()).ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
@@ -109,14 +110,14 @@ public class AuthScript : MonoBehaviour
             Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
             reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
 
-            writeNewUserInDb(auth.CurrentUser.UserId, NewName.text.ToString());
+            WriteNewUserInDb(auth.CurrentUser.UserId, newName.text.ToString());
             moveScene = true;
         });
 
     }
     void SignIn()
     {
-        auth.SignInWithEmailAndPasswordAsync(SignInEmail.text.ToString(), SignInPassword.text.ToString()).ContinueWith(task1 =>
+        auth.SignInWithEmailAndPasswordAsync(signInEmail.text.ToString(), signInPassword.text.ToString()).ContinueWith(task1 =>
         {
             if (task1.IsCanceled)
             {
@@ -162,12 +163,12 @@ public class AuthScript : MonoBehaviour
                 tempName = snapshot.Child("name").Value.ToString();
 
                 User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, tempName);
-                instance = new CurrentUser(temp, auth.CurrentUser.UserId);
+                Instance = new CurrentUser(temp, auth.CurrentUser.UserId);
                 moveScene = true;
             });
         });
     }
-    void writeNewUserInDb(string id, string name)
+    void WriteNewUserInDb(string id, string name)
     {
         User user = new User(name);
         user.AddColor(new List<int> { 255, 0, 0, 150 });
@@ -178,70 +179,72 @@ public class AuthScript : MonoBehaviour
         string json = JsonUtility.ToJson(user);
         reference.SetRawJsonValueAsync(json);
 
-        instance = new CurrentUser(user, id);
+        Instance = new CurrentUser(user, id);
     }
     void GoToCreateNewUser()
     {
-        RegisterP.SetActive(true);
-        SignInP.SetActive(false);
-        SignInEmail.text = "";
-        SignInPassword.text = "";
+        registerP.SetActive(true);
+        signInP.SetActive(false);
+        signInEmail.text = "";
+        signInPassword.text = "";
+        signInPassword.contentType = InputField.ContentType.Password;
     }
     void GoToSignIn()
     {
-        RegisterP.SetActive(false);
-        SignInP.SetActive(true);
-        RegisterEmail.text = "";
-        RegisterPassword.text = "";
-        NewName.text = "";
+        registerP.SetActive(false);
+        signInP.SetActive(true);
+        registerEmail.text = "";
+        registerPassword.text = "";
+        newName.text = "";
+        signInPassword.contentType = InputField.ContentType.Password;
     }
     void ShowSignInPassword()
     {
-        if (SignInPassword.contentType == InputField.ContentType.Password)
+        if (signInPassword.contentType == InputField.ContentType.Password)
         {
-            SignInPassword.contentType = InputField.ContentType.Standard;
+            signInPassword.contentType = InputField.ContentType.Standard;
         }
         else
         {
-            SignInPassword.contentType = InputField.ContentType.Password;
+            signInPassword.contentType = InputField.ContentType.Password;
         }
-        SignInPassword.ForceLabelUpdate();
+        signInPassword.ForceLabelUpdate();
     }
     void ShowRegisterPassword()
     {
-        if (RegisterPassword.contentType == InputField.ContentType.Password)
+        if (registerPassword.contentType == InputField.ContentType.Password)
         {
-            RegisterPassword.contentType = InputField.ContentType.Standard;
+            registerPassword.contentType = InputField.ContentType.Standard;
         }
         else
         {
-            RegisterPassword.contentType = InputField.ContentType.Password;
+            registerPassword.contentType = InputField.ContentType.Password;
         }
-        RegisterPassword.ForceLabelUpdate();
+        registerPassword.ForceLabelUpdate();
     }
 }
 public class User
 {
-    public int coins;
+    public int Coins;
     public List<int> OwnColors;
     public List<int> CurrentColor;
     public List<int> OptionalColors;
-    public int bestScore;
-    public string name;
+    public int BestScore;
+    public string Name;
     public User(string name)
     {
-        coins = 200;
+        Coins = 200;
         CurrentColor = new List<int> { 25, 108, 133, 255, 1 };
         OwnColors = new List<int> { -1, 25, 108, 133, 255 };
         OptionalColors = new List<int> { -1, 25, 108, 133, 255 };
-        bestScore = 0;
-        this.name = name;
+        BestScore = 0;
+        this.Name = name;
     }
     public User(int co, List<int> ow, List<int> cu, List<int> op, int best, string name)
     {
-        coins = co;
-        bestScore = best;
-        this.name = name;
+        Coins = co;
+        BestScore = best;
+        this.Name = name;
         OwnColors = new List<int>();
         CurrentColor = new List<int>();
         OptionalColors = new List<int>();
@@ -252,9 +255,9 @@ public class User
     }
     public User(User temp)
     {
-        coins = temp.coins;
-        name = temp.name;
-        bestScore = temp.bestScore;
+        Coins = temp.Coins;
+        Name = temp.Name;
+        BestScore = temp.BestScore;
         OwnColors = new List<int>();
         CurrentColor = new List<int>();
         OptionalColors = new List<int>();
@@ -289,11 +292,11 @@ public class User
     }
     public int GetCoins()
     {
-        return coins;
+        return Coins;
     }
     public void ChangeCoins(int coins)
     {
-        this.coins += coins;
+        this.Coins += coins;
     }
     public void SetCurrentPlace(int place)
     {
@@ -305,53 +308,53 @@ public class User
     }
     public void SetCoins(int coins)
     {
-        this.coins = coins;
+        this.Coins = coins;
     }
     public string GetName()
     {
-        return name;
+        return Name;
     }
     public int GetBestScore()
     {
-        return bestScore;
+        return BestScore;
     }
     public void SetBestScore(int score)
     {
-        bestScore = score;
+        BestScore = score;
     }
 }
 public class LeaderBoard
 {
-    public int score;
-    public string name;
+    public int Score;
+    public string Name;
     public string ID;
     public LeaderBoard(int score, string name, string ID)
     {
-        this.score = score;
-        this.name = name;
+        this.Score = score;
+        this.Name = name;
         this.ID = ID;
     }
     public LeaderBoard(LeaderBoard temp)
     {
-        this.score = temp.score;
-        this.name = temp.name;
+        this.Score = temp.Score;
+        this.Name = temp.Name;
         this.ID = temp.ID;
     }
     public int GetScore()
     {
-        return score;
+        return Score;
     }
     public string GetName()
     {
-        return name;
+        return Name;
     }
     public void SetName(string name)
     {
-        this.name = name;
+        this.Name = name;
     }
     public void SetScore(int score)
     {
-        this.score = score;
+        this.Score = score;
     }
     public void SetId(string ID)
     {
@@ -364,44 +367,44 @@ public class LeaderBoard
 }
 public class CurrentUser
 {
-    public User user;
-    public string userID;
+    public User User;
+    public string UserID;
     public CurrentUser(List<int> current, List<int> optional, List<int> own, int coins, string id, int best, string name)
     {
-        user = new User(coins, own, current, optional, best, name);
-        userID = id;
+        User = new User(coins, own, current, optional, best, name);
+        UserID = id;
     }
     public CurrentUser(User user, string id)
     {
-        this.user = new User(user);
-        userID = id;
+        this.User = new User(user);
+        UserID = id;
     }
     public void UpdateCurrent(List<int> current)
     {
-        user.GetCurrent().Clear();
-        user.GetCurrent().AddRange(current);
+        User.GetCurrent().Clear();
+        User.GetCurrent().AddRange(current);
     }
     public void UpdateOwned(List<int> owned)
     {
-        user.GetOwned().Clear();
-        user.GetOwned().AddRange(owned);
+        User.GetOwned().Clear();
+        User.GetOwned().AddRange(owned);
     }
     public void UpdateOptional(List<int> optional)
     {
-        user.GetOptional().Clear();
-        user.GetOptional().AddRange(optional);
+        User.GetOptional().Clear();
+        User.GetOptional().AddRange(optional);
     }
     public void UpdateCoins(int coins)
     {
-        user.SetCoins(coins);
+        User.SetCoins(coins);
     }
     public User GetUser()
     {
-        return user;
+        return User;
     }
     public string GetUserId()
     {
-        return userID;
+        return UserID;
     }
 }
 

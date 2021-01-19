@@ -414,7 +414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d117a5733f37d9f4087a62a648a3bff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TotalMeters: {fileID: 0}
+  totalMeters: {fileID: 250629951}
 --- !u!114 &250629950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1704,8 +1704,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a041746a6742f2547a9175d9451ab6db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Lamp: {fileID: 919132149155446097, guid: 1b155a217727cac4ea8765a161112a65, type: 3}
-  Tamrur: {fileID: 919132149155446097, guid: 21f25ef7b4aec3248a2ecb2866c54a81, type: 3}
+  lamp: {fileID: 919132149155446097, guid: 1b155a217727cac4ea8765a161112a65, type: 3}
+  tamrur: {fileID: 919132149155446097, guid: 21f25ef7b4aec3248a2ecb2866c54a81, type: 3}
 --- !u!4 &988079498
 Transform:
   m_ObjectHideFlags: 0
@@ -1827,7 +1827,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d117a5733f37d9f4087a62a648a3bff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TotalMeters: {fileID: 0}
+  totalMeters: {fileID: 1037467157}
 --- !u!114 &1037467160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2367,9 +2367,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuUI: {fileID: 2089585494}
-  GamePanelUI: {fileID: 1184932532}
-  ResumeCountDownPanel: {fileID: 322652574}
-  BeforeStartPanel: {fileID: 0}
+  gamePanelUI: {fileID: 1184932532}
+  resumeCountDownPanel: {fileID: 322652574}
+  countDownText: {fileID: 1819663730}
 --- !u!114 &1267749940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2382,7 +2382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bdf03a305aaa7d4ea372becd995f349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GamePanelUI: {fileID: 1184932532}
+  gamePanelUI: {fileID: 1184932532}
   pauseMenuUI: {fileID: 2089585494}
 --- !u!114 &1267749941
 MonoBehaviour:
@@ -2483,7 +2483,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1267749939}
         m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
-        m_MethodName: Shop
+        m_MethodName: GoToShop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5650,8 +5650,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b02945dfa5f097438307e26596df986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeathPanel: {fileID: 35280403}
-  GamePanel: {fileID: 1184932532}
+  deathPanel: {fileID: 35280403}
+  gamePanel: {fileID: 1184932532}
 --- !u!23 &927117630919425614
 MeshRenderer:
   m_ObjectHideFlags: 0

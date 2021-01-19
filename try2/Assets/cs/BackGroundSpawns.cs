@@ -17,7 +17,7 @@ public class BackGroundSpawns : MonoBehaviour
     {
         if (!CollCheck.HasLost)
         {
-            acceleration = SetUp.totalAcceleration;
+            acceleration = SetUp.TotalAcceleration;
             if (!exit)
             {
                 //checking if the object need to be destroyed, else bring it forward
@@ -38,6 +38,6 @@ public class BackGroundSpawns : MonoBehaviour
     void UpdateVer()
     {
         exit = false;
-        acceleration = SetUp.totalAcceleration;
+        acceleration = SetUp.TotalAcceleration;
     }
 }

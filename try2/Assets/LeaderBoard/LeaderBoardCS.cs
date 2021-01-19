@@ -24,21 +24,21 @@ public class LeaderBoardCS : MonoBehaviour
         SetBoldPlayerScores();
         SetLeaderBoards();
 
-        bestScore.text = "score: " + AuthScript.instance.GetUser().GetBestScore();
+        bestScore.text = "score: " + AuthScript.Instance.GetUser().GetBestScore();
         HasChanged = false;
     }
     void SetLeaderBoards()
     {
-        place1.text = "1. name: " + AuthScript.leaderBoards[0].GetName().ToString() + " score: " + AuthScript.leaderBoards[0].GetScore();
-        place2.text = "2. name: " + AuthScript.leaderBoards[1].GetName().ToString() + " score: " + AuthScript.leaderBoards[1].GetScore();
-        place3.text = "3. name: " + AuthScript.leaderBoards[2].GetName().ToString() + " score: " + AuthScript.leaderBoards[2].GetScore();
-        place4.text = "4. name: " + AuthScript.leaderBoards[3].GetName().ToString() + " score: " + AuthScript.leaderBoards[3].GetScore();
-        place5.text = "5. name: " + AuthScript.leaderBoards[4].GetName().ToString() + " score: " + AuthScript.leaderBoards[4].GetScore();
-        place6.text = "6. name: " + AuthScript.leaderBoards[5].GetName().ToString() + " score: " + AuthScript.leaderBoards[5].GetScore();
-        place7.text = "7. name: " + AuthScript.leaderBoards[6].GetName().ToString() + " score: " + AuthScript.leaderBoards[6].GetScore();
-        place8.text = "8. name: " + AuthScript.leaderBoards[7].GetName().ToString() + " score: " + AuthScript.leaderBoards[7].GetScore();
-        place9.text = "9. name: " + AuthScript.leaderBoards[8].GetName().ToString() + " score: " + AuthScript.leaderBoards[8].GetScore();
-        place10.text = "10. name: " + AuthScript.leaderBoards[9].GetName().ToString() + " score: " + AuthScript.leaderBoards[9].GetScore();
+        place1.text = "1. name: " + AuthScript.LeaderBoards[0].GetName().ToString() + " score: " + AuthScript.LeaderBoards[0].GetScore();
+        place2.text = "2. name: " + AuthScript.LeaderBoards[1].GetName().ToString() + " score: " + AuthScript.LeaderBoards[1].GetScore();
+        place3.text = "3. name: " + AuthScript.LeaderBoards[2].GetName().ToString() + " score: " + AuthScript.LeaderBoards[2].GetScore();
+        place4.text = "4. name: " + AuthScript.LeaderBoards[3].GetName().ToString() + " score: " + AuthScript.LeaderBoards[3].GetScore();
+        place5.text = "5. name: " + AuthScript.LeaderBoards[4].GetName().ToString() + " score: " + AuthScript.LeaderBoards[4].GetScore();
+        place6.text = "6. name: " + AuthScript.LeaderBoards[5].GetName().ToString() + " score: " + AuthScript.LeaderBoards[5].GetScore();
+        place7.text = "7. name: " + AuthScript.LeaderBoards[6].GetName().ToString() + " score: " + AuthScript.LeaderBoards[6].GetScore();
+        place8.text = "8. name: " + AuthScript.LeaderBoards[7].GetName().ToString() + " score: " + AuthScript.LeaderBoards[7].GetScore();
+        place9.text = "9. name: " + AuthScript.LeaderBoards[8].GetName().ToString() + " score: " + AuthScript.LeaderBoards[8].GetScore();
+        place10.text = "10. name: " + AuthScript.LeaderBoards[9].GetName().ToString() + " score: " + AuthScript.LeaderBoards[9].GetScore();
     }
     void Update()
     {
@@ -55,11 +55,11 @@ public class LeaderBoardCS : MonoBehaviour
     }
     void Play()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Game");
     }
     void SetBoldPlayerScores()
     {
-        if (AuthScript.leaderBoards[0].GetId() == AuthScript.instance.GetUserId())
+        if (AuthScript.LeaderBoards[0].GetId() == AuthScript.Instance.GetUserId())
         {
             place1.fontStyle = FontStyle.Bold;
         }
@@ -68,7 +68,7 @@ public class LeaderBoardCS : MonoBehaviour
             place1.fontStyle = FontStyle.Normal;
         }
 
-        if (AuthScript.leaderBoards[1].GetId() == AuthScript.instance.GetUserId())
+        if (AuthScript.LeaderBoards[1].GetId() == AuthScript.Instance.GetUserId())
         {
             place2.fontStyle = FontStyle.Bold;
         }
@@ -77,7 +77,7 @@ public class LeaderBoardCS : MonoBehaviour
             place2.fontStyle = FontStyle.Normal;
         }
 
-        if (AuthScript.leaderBoards[2].GetId() == AuthScript.instance.GetUserId())
+        if (AuthScript.LeaderBoards[2].GetId() == AuthScript.Instance.GetUserId())
         {
             place3.fontStyle = FontStyle.Bold;
         }
@@ -86,7 +86,7 @@ public class LeaderBoardCS : MonoBehaviour
             place3.fontStyle = FontStyle.Normal;
         }
 
-        if (AuthScript.leaderBoards[3].GetId() == AuthScript.instance.GetUserId())
+        if (AuthScript.LeaderBoards[3].GetId() == AuthScript.Instance.GetUserId())
         {
             place4.fontStyle = FontStyle.Bold;
         }
@@ -95,7 +95,7 @@ public class LeaderBoardCS : MonoBehaviour
             place4.fontStyle = FontStyle.Normal;
         }
 
-        if (AuthScript.leaderBoards[4].GetId() == AuthScript.instance.GetUserId())
+        if (AuthScript.LeaderBoards[4].GetId() == AuthScript.Instance.GetUserId())
         {
             place5.fontStyle = FontStyle.Bold;
         }
@@ -104,7 +104,7 @@ public class LeaderBoardCS : MonoBehaviour
             place5.fontStyle = FontStyle.Normal;
         }
 
-        if (AuthScript.leaderBoards[5].GetId() == AuthScript.instance.GetUserId())
+        if (AuthScript.LeaderBoards[5].GetId() == AuthScript.Instance.GetUserId())
         {
             place6.fontStyle = FontStyle.Bold;
         }
@@ -113,7 +113,7 @@ public class LeaderBoardCS : MonoBehaviour
             place6.fontStyle = FontStyle.Normal;
         }
 
-        if (AuthScript.leaderBoards[6].GetId() == AuthScript.instance.GetUserId())
+        if (AuthScript.LeaderBoards[6].GetId() == AuthScript.Instance.GetUserId())
         {
             place7.fontStyle = FontStyle.Bold;
         }
@@ -122,7 +122,7 @@ public class LeaderBoardCS : MonoBehaviour
             place7.fontStyle = FontStyle.Normal;
         }
 
-        if (AuthScript.leaderBoards[7].GetId() == AuthScript.instance.GetUserId())
+        if (AuthScript.LeaderBoards[7].GetId() == AuthScript.Instance.GetUserId())
         {
             place8.fontStyle = FontStyle.Bold;
         }
@@ -131,7 +131,7 @@ public class LeaderBoardCS : MonoBehaviour
             place8.fontStyle = FontStyle.Normal;
         }
 
-        if (AuthScript.leaderBoards[8].GetId() == AuthScript.instance.GetUserId())
+        if (AuthScript.LeaderBoards[8].GetId() == AuthScript.Instance.GetUserId())
         {
             place9.fontStyle = FontStyle.Bold;
         }
@@ -140,7 +140,7 @@ public class LeaderBoardCS : MonoBehaviour
             place9.fontStyle = FontStyle.Normal;
         }
 
-        if (AuthScript.leaderBoards[9].GetId() == AuthScript.instance.GetUserId())
+        if (AuthScript.LeaderBoards[9].GetId() == AuthScript.Instance.GetUserId())
         {
             place10.fontStyle = FontStyle.Bold;
         }

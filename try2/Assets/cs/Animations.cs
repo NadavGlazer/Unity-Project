@@ -5,10 +5,17 @@ using UnityEngine;
 
 public class Animations : MonoBehaviour
 {
-    private Animator animator;
-    bool left, right, isGrounded, Fjump, SJump, hasLost, first;
+    public static bool DeathAnimationFinished;
+    public static bool SlideDown;
+    Animator animator;
+    bool left;
+    bool right;
+    bool isGrounded;
+    bool Fjump;
+    bool SJump;
+    bool hasLost;
+    bool first;
     int frameCount;
-    public static bool deathAnimationFinished, slideDown;
     float timeSince;
     // Start is called before the first frame update
     void Start()
@@ -21,31 +28,31 @@ public class Animations : MonoBehaviour
         if (!hasLost)
         {
             //updating the boolians
-            left = Move.swipeLeft;
-            right = Move.swipeRight;
-            isGrounded = Move.isGrounded;
-            Fjump = Move.firstJump;
-            SJump = Move.secondJump;
+            left = Move.SwipeLeft;
+            right = Move.SwipeRight;
+            isGrounded = Move.IsGrounded;
+            Fjump = Move.FirstJump;
+            SJump = Move.SecondJump;
             hasLost = CollCheck.HasLost;
 
             if (first)
             {
-                slideDown = isGrounded && Move.isSlideDown;
+                SlideDown = isGrounded && Move.IsSlideDown;
             }
             else
             {
-                slideDown = !Fjump && isGrounded && !right && !left;
+                SlideDown = !Fjump && isGrounded && !right && !left;
             }
 
-            if (slideDown && (first || Move.isSlideDown))
+            if (SlideDown && (first || Move.IsSlideDown))
             {
                 first = false;
                 timeSince = Time.time + 1.5f;
             }
 
-            if (slideDown && timeSince <= Time.time)
+            if (SlideDown && timeSince <= Time.time)
             {
-                slideDown = false;
+                SlideDown = false;
                 first = true;
             }
 
@@ -53,8 +60,8 @@ public class Animations : MonoBehaviour
         }
         if (hasLost)
         {
-            right = left = SJump = Fjump = slideDown = false;
-            if (!deathAnimationFinished && frameCount < 200)
+            right = left = SJump = Fjump = SlideDown = false;
+            if (!DeathAnimationFinished && frameCount < 200)
             {
                 animator.SetBool("HasLost", true);
                 frameCount++;
@@ -62,7 +69,7 @@ public class Animations : MonoBehaviour
             if (frameCount >= 200)
             {
                 animator.SetBool("HasLost", false);
-                deathAnimationFinished = true;
+                DeathAnimationFinished = true;
             }
         }
     }
@@ -101,7 +108,7 @@ public class Animations : MonoBehaviour
         {
             animator.SetBool("SJump", false);
         }
-        if (isGrounded && (!right && !left) && !slideDown)
+        if (isGrounded && (!right && !left) && !SlideDown)
         {
             animator.SetBool("run", true);
         }
@@ -109,7 +116,7 @@ public class Animations : MonoBehaviour
         {
             animator.SetBool("run", false);
         }
-        if (slideDown)
+        if (SlideDown)
         {
 
             animator.SetBool("isSlideDown", true);
@@ -124,7 +131,7 @@ public class Animations : MonoBehaviour
     void UpdateVer()
     {
         animator = GetComponent<Animator>();
-        deathAnimationFinished = slideDown = false;
+        DeathAnimationFinished = SlideDown = false;
         first = true;
         frameCount = 0;
         timeSince = 0;

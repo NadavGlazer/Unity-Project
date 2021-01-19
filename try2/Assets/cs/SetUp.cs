@@ -9,12 +9,17 @@ using UnityEngine;
 
 public class SetUp : MonoBehaviour
 {
-    public static int frames;
-    public static float totalAcceleration, totalRun;
-    float accBefore, timeWP, maxACC, sPlaceStartZ;
-    bool jump;
-    string thePlaceName, theSPlaceName;
-    int fPlaceEndPos, sPlaceEndPos;
+    public static int Frames;
+    public static float TotalAcceleration;
+    public static float TotalRun;
+    float accBefore;
+    float timeWP;
+    float maxACC;
+    float sPlaceStartZ;
+    string thePlaceName;
+    string theSPlaceName;
+    int fPlaceEndPos;
+    int sPlaceEndPos;
     void Start()
     {
         UpdateVer();
@@ -36,23 +41,22 @@ public class SetUp : MonoBehaviour
             if (!PauseMenu.IsPaused)
             {
                 //updating verables
-                totalRun += totalAcceleration * (float)3;
-                frames++;
-                jump = Move.firstJump;
+                TotalRun += TotalAcceleration * (float)3;
+                Frames++;
 
                 //accelerating by the time         
 
-                if (totalAcceleration <= maxACC && frames % 10 == 0)
+                if (TotalAcceleration <= maxACC && Frames % 10 == 0)
                 {
-                    totalAcceleration = (totalAcceleration + Time.deltaTime / 40) * Time.timeScale;
+                    TotalAcceleration = (TotalAcceleration + Time.deltaTime / 40) * Time.timeScale;
                 }
-                if (totalAcceleration > maxACC && frames % 200 == 0)
+                if (TotalAcceleration > maxACC && Frames % 200 == 0)
                 {
-                    totalAcceleration = (totalAcceleration + Time.deltaTime / 60) * Time.timeScale;
+                    TotalAcceleration = (TotalAcceleration + Time.deltaTime / 60) * Time.timeScale;
                 }
 
                 //moving the Places        
-                transform.position -= new Vector3(0, 0, totalAcceleration);
+                transform.position -= new Vector3(0, 0, TotalAcceleration);
 
                 //every time the field z is 5- teleports the field to where it began in to create infnite loop
                 if (transform.position.z <= fPlaceEndPos && transform.name == thePlaceName)
@@ -71,9 +75,9 @@ public class SetUp : MonoBehaviour
     void UpdateVer()
     {
         Application.targetFrameRate = 60;
-        frames = 1;
-        totalAcceleration = 0.01f;
-        accBefore = timeWP = totalRun = 0.0f;
+        Frames = 1;
+        TotalAcceleration = 0.01f;
+        accBefore = timeWP = TotalRun = 0.0f;
         maxACC = 0.045f;
         Time.timeScale = 1f;
         thePlaceName = "ThePlace";

@@ -6,10 +6,12 @@ using UnityEngine;
 public class CollCheck : MonoBehaviour
 {
     public static bool HasLost;
-    public GameObject DeathPanel;
-    public GameObject GamePanel;
-    double topOfTrain, topOfCrate;
-    string trainCloneName, crateCloneName;
+    public GameObject deathPanel;
+    public GameObject gamePanel;
+    double topOfTrain;
+    double topOfCrate;
+    string trainCloneName;
+    string crateCloneName;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,11 +21,11 @@ public class CollCheck : MonoBehaviour
     void Update()
     {
         //waiting untill the death animation ends
-        if (Animations.deathAnimationFinished)
+        if (Animations.DeathAnimationFinished)
         {
             Time.timeScale = 0f;
-            DeathPanel.SetActive(true);
-            GamePanel.SetActive(false);
+            deathPanel.SetActive(true);
+            gamePanel.SetActive(false);
         }
     }
     //checking for collisions

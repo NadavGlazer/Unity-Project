@@ -3365,15 +3365,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07442865b4727974f80576bb2a29bae4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SignInEmail: {fileID: 735789187}
-  RegisterEmail: {fileID: 928680475}
-  RegisterPassword: {fileID: 949682511}
-  SignInPassword: {fileID: 1797967605}
-  NewName: {fileID: 2072134430}
+  signInEmail: {fileID: 735789187}
+  registerEmail: {fileID: 928680475}
+  registerPassword: {fileID: 949682511}
+  signInPassword: {fileID: 1797967605}
+  newName: {fileID: 2072134430}
   errortextSign: {fileID: 1007473025}
   errortextRegister: {fileID: 136020238}
-  RegisterP: {fileID: 1494157852}
-  SignInP: {fileID: 584287137}
+  registerP: {fileID: 1494157852}
+  signInP: {fileID: 584287137}
 --- !u!4 &2031900190
 Transform:
   m_ObjectHideFlags: 0

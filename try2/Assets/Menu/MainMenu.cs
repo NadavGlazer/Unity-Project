@@ -10,13 +10,13 @@ using Firebase.Unity;
 public class MainMenu : MonoBehaviour
 {
     public Text coinsTxt;
-    public GameObject MainMenuPanel;
-    public GameObject SettingsPanel;
+    public GameObject mainMenuPanel;
+    public GameObject settingsPanel;
 
     // Start is called before the first frame update
     void Start()
     {
-        coinsTxt.text = "coins: " + AuthScript.instance.GetUser().GetCoins();
+        coinsTxt.text = "coins: " + AuthScript.Instance.GetUser().GetCoins();
     }
 
     // Update is called once per frame
@@ -28,7 +28,7 @@ public class MainMenu : MonoBehaviour
     void GoToGame()
     {
         //ChangeColor.temp.AddRange(new List<int>() { GetUser.FirstColor[0], GetUser.FirstColor[1], GetUser.FirstColor[2], GetUser.FirstColor[3] });
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Game");
     }
     void GoToLeaderBoard()
     {
@@ -36,13 +36,13 @@ public class MainMenu : MonoBehaviour
     }
     void GoToSetting()
     {
-        MainMenuPanel.SetActive(false);
-        SettingsPanel.SetActive(true);
+        mainMenuPanel.SetActive(false);
+        settingsPanel.SetActive(true);
     }
     void GoToMainMenu()
     {
-        MainMenuPanel.SetActive(true);
-        SettingsPanel.SetActive(false);
+        mainMenuPanel.SetActive(true);
+        settingsPanel.SetActive(false);
     }
     void LogOut()
     {

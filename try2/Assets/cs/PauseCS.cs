@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class PauseCS : MonoBehaviour
 {
-    public GameObject GamePanelUI;
+    public GameObject gamePanelUI;
     public GameObject pauseMenuUI;
-    float pauseTimeScale = 0.0001f;
+    float pauseTimeScale;
     //Pausing the game
+    void Start()
+    {
+        pauseTimeScale = 0.0001f;
+    }
     void Pause()
     {
         if (!CollCheck.HasLost)
         {
-            GamePanelUI.SetActive(false);
+            gamePanelUI.SetActive(false);
             pauseMenuUI.SetActive(true);
             Time.timeScale = pauseTimeScale;
             PauseMenu.IsPaused = true;

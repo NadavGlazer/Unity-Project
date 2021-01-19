@@ -8,15 +8,16 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    public static bool IsPaused, isFirst;
+    public static bool IsPaused;
+    public static bool IsFirst;
     public GameObject pauseMenuUI;
-    public GameObject GamePanelUI;
-    public GameObject ResumeCountDownPanel;
-    public GameObject BeforeStartPanel;
-    float countDown, countGo;
-    bool startCount, isGO;
-    Text CountDownText;
-    Transform TextTR;
+    public GameObject gamePanelUI;
+    public GameObject resumeCountDownPanel;
+    public Text countDownText;
+    float countDown;
+    float countGo;
+    bool startCount;
+    bool isGO;
     string goText;
     // Update is called once per frame
     void Start()
@@ -32,9 +33,9 @@ public class PauseMenu : MonoBehaviour
     {
         countDown = (float)Math.Round(Time.time, 4) + 0.0004f - (int)(Time.time % 0.001);
         startCount = true;
-        ResumeCountDownPanel.SetActive(true);
+        resumeCountDownPanel.SetActive(true);
         pauseMenuUI.SetActive(false);
-        GamePanelUI.SetActive(true);
+        gamePanelUI.SetActive(true);
     }
     //Pausing the game
     void Pause()
@@ -42,7 +43,7 @@ public class PauseMenu : MonoBehaviour
         if (!CollCheck.HasLost)
         {
             pauseMenuUI.SetActive(true);
-            GamePanelUI.SetActive(false);
+            gamePanelUI.SetActive(false);
             Time.timeScale = 0.0001f;
             IsPaused = true;
         }
@@ -53,7 +54,7 @@ public class PauseMenu : MonoBehaviour
         {
             if (Math.Round(10000 * (countDown - Time.time)) >= 1)
             {
-                CountDownText.text = "" + Math.Round(10000 * (countDown - Time.time) - 1);
+                countDownText.text = "" + Math.Round(10000 * (countDown - Time.time) - 1);
             }
         }
         if (startCount && Math.Round(10000 * (countDown - Time.time)) <= 1)
@@ -66,11 +67,11 @@ public class PauseMenu : MonoBehaviour
 
             if (Time.time <= countGo)
             {
-                CountDownText.text = goText;
+                countDownText.text = goText;
             }
             else
             {
-                ResumeCountDownPanel.SetActive(false);
+                resumeCountDownPanel.SetActive(false);
                 startCount = false;
                 isGO = false;
             }
@@ -80,14 +81,12 @@ public class PauseMenu : MonoBehaviour
     }
     void UpdateVer()
     {
-        IsPaused = isFirst = false;
+        IsPaused = false;
         countDown = countGo = 0.0f;
         startCount = isGO = false;
-        TextTR = ResumeCountDownPanel.transform.Find("ResumeCountDown");
-        CountDownText = TextTR.GetComponent<Text>();
         goText = "GO!";
     }
-    void Shop()
+    void GoToShop()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("Shop");

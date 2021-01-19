@@ -6,11 +6,14 @@ using UnityEngine;
 public class ObstacleMovement : MonoBehaviour
 {
     bool exit;
-    float acceleration;
-    string trainCloneName, crateCloneName;
-    int trainZOfDestruction, crateZOfDestruction;
-    float trainAcc, crateAcc;
     bool first;
+    float acceleration;
+    float trainAcc;
+    float crateAcc;
+    string trainCloneName;
+    string crateCloneName;
+    int trainZOfDestruction;
+    int crateZOfDestruction;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +24,7 @@ public class ObstacleMovement : MonoBehaviour
     {
         if (!CollCheck.HasLost)
         {
-            acceleration = SetUp.totalAcceleration;
+            acceleration = SetUp.TotalAcceleration;
             if (!exit)
             {
                 //deleting the object if he is in the right place
@@ -49,7 +52,7 @@ public class ObstacleMovement : MonoBehaviour
                 }
                 if (transform.GetComponent<Transform>().position.z < 7f && transform.name == trainCloneName && first)
                 {
-                    ObstacleSpawner.spawn = true;
+                    ObstacleSpawner.CanSpawn = true;
                     first = false;
                 }
 
@@ -61,7 +64,7 @@ public class ObstacleMovement : MonoBehaviour
     void UpdateVer()
     {
         exit = false;
-        acceleration = SetUp.totalAcceleration;
+        acceleration = SetUp.TotalAcceleration;
         trainCloneName = "Train(Clone)";
         crateCloneName = "Crate(Clone)";
         trainZOfDestruction = -12;

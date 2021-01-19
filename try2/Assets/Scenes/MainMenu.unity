@@ -1896,8 +1896,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinsTxt: {fileID: 601412850}
-  MainMenuPanel: {fileID: 473763011}
-  SettingsPanel: {fileID: 1448584286}
+  mainMenuPanel: {fileID: 473763011}
+  settingsPanel: {fileID: 1448584286}
 --- !u!4 &1618628009
 Transform:
   m_ObjectHideFlags: 0

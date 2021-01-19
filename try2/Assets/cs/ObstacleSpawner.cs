@@ -9,12 +9,18 @@ public class ObstacleSpawner : MonoBehaviour
     public GameObject train;
     public GameObject box;
     float nextSpawn;
+    float trainY;
+    float boxY;
     int whatTemplate;
     int whereToSpawn;
     Vector3 temp;
-    Vector3 trainColliderSize, boxColliderSize, boxColliderCenter, trainColliderCenter, trainLocalScale, crateLocalScale;
-    float trainY, boxY;
-    public static bool spawn;
+    Vector3 trainColliderSize;
+    Vector3 boxColliderSize;
+    Vector3 boxColliderCenter;
+    Vector3 trainColliderCenter;
+    Vector3 trainLocalScale;
+    Vector3 crateLocalScale;
+    public static bool CanSpawn;
     bool first;
     // Start is called before the first frame update
     void Start()
@@ -27,7 +33,7 @@ public class ObstacleSpawner : MonoBehaviour
     {
         if (!CollCheck.HasLost)
         {
-            if (Time.time > nextSpawn && spawn)
+            if (Time.time > nextSpawn && CanSpawn)
             {
                 whatTemplate = Random.Range(1, 7);
                 switch (whatTemplate)
@@ -83,7 +89,7 @@ public class ObstacleSpawner : MonoBehaviour
                     nextSpawn = Time.time + Random.Range(1.0f, 3.0f);
                 }
 
-                spawn = false;
+                CanSpawn = false;
             }
 
         }
@@ -134,7 +140,7 @@ public class ObstacleSpawner : MonoBehaviour
         boxY = -0.01f;
         trainLocalScale = new Vector3((float)1.5, (float)1, (float)1.5);
         crateLocalScale = new Vector3((float)0.3, (float)0.3, (float)0.3);
-        spawn = true;
+        CanSpawn = true;
         first = true;
     }
 }

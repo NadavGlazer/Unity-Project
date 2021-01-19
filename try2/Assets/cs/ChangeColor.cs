@@ -10,9 +10,9 @@ public class ChangeColor : MonoBehaviour
     void Start()
     {
         playerColor.color = new Color32(
-            (byte)AuthScript.instance.GetUser().GetCurrent()[0],
-            (byte)AuthScript.instance.GetUser().GetCurrent()[1],
-            (byte)AuthScript.instance.GetUser().GetCurrent()[2],
-            (byte)AuthScript.instance.GetUser().GetCurrent()[3]);
+            (byte)AuthScript.Instance.GetUser().GetCurrent()[0],
+            (byte)AuthScript.Instance.GetUser().GetCurrent()[1],
+            (byte)AuthScript.Instance.GetUser().GetCurrent()[2],
+            (byte)AuthScript.Instance.GetUser().GetCurrent()[3]);
     }
 }

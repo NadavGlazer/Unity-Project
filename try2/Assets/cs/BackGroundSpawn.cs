@@ -10,11 +10,16 @@ using UnityEngine;
 
 public class BackGroundSpawn : MonoBehaviour
 {
-    public GameObject Lamp;
-    public GameObject Tamrur;
-    int whatSpawn, lane, numLamps, numTamrur;
-    float spawnRate, nextSpawn;
-    public static float spawnerZ;
+    public GameObject lamp;
+    public GameObject tamrur;
+    int whatSpawn;
+    int lane;
+    int numLamps;
+    int numTamrur;
+    float spawnRate;
+    float nextSpawn;
+    float spawnerZ;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,11 +52,11 @@ public class BackGroundSpawn : MonoBehaviour
                 {
                     case 1:
                         numLamps++;
-                        SpawnLamp(lane, Lamp, numLamps);
+                        SpawnLamp(lane, numLamps);
                         break;
                     case 2:
                         numTamrur++;
-                        SpawnTamrur(lane, Tamrur, numTamrur);
+                        SpawnTamrur(lane, numTamrur);
                         break;
                 }
                 nextSpawn = Time.time + spawnRate;
@@ -59,7 +64,7 @@ public class BackGroundSpawn : MonoBehaviour
         }
     }
     //spawn lamp in given place
-    void SpawnLamp(int lane, GameObject Lamp, int numLamps)
+    void SpawnLamp(int lane, int numLamps)
     {
 
         Vector3 temp = new Vector3(0, 0, spawnerZ);
@@ -74,7 +79,7 @@ public class BackGroundSpawn : MonoBehaviour
             temp += new Vector3((float)2.3, 0, 0);
             rotation = -90;
         }
-        var lamp = Instantiate(Lamp, temp, Quaternion.Euler(new Vector3(0, rotation, 0))) as GameObject;
+        var templamp = Instantiate(lamp, temp, Quaternion.Euler(new Vector3(0, rotation, 0))) as GameObject;
         GameObject spot = GameObject.Find("Spot");
         spot.GetComponent<Light>().range = 5f;
         spot.GetComponent<Light>().intensity = 0.007f;
@@ -82,13 +87,13 @@ public class BackGroundSpawn : MonoBehaviour
         Color l = new Color((float)200, (float)207, (float)97);
         spot.GetComponent<Light>().color = l;
         spot.gameObject.name = "spot" + numLamps;
-        lamp.GetComponent<Transform>().localScale = new Vector3((float)1.2, (float)1.2, (float)1.2);
-        lamp.AddComponent<RectTransform>();
-        lamp.AddComponent<BackGroundSpawns>();
+        templamp.GetComponent<Transform>().localScale = new Vector3((float)1.2, (float)1.2, (float)1.2);
+        templamp.AddComponent<RectTransform>();
+        templamp.AddComponent<BackGroundSpawns>();
 
     }
     //spawns tamrur in given place
-    void SpawnTamrur(int lane, GameObject Tamrur, int numTamrur)
+    void SpawnTamrur(int lane, int numTamrur)
     {
         Vector3 temp = new Vector3(0, 0, spawnerZ);
         int rotation = 90;
@@ -100,9 +105,9 @@ public class BackGroundSpawn : MonoBehaviour
         {
             temp += new Vector3((float)1.9, 0, 0);
         }
-        var tamrur = Instantiate(Tamrur, temp, Quaternion.Euler(new Vector3((float)-90, rotation, 0))) as GameObject;
-        tamrur.AddComponent<RectTransform>();
-        tamrur.AddComponent<BackGroundSpawns>();
+        var temptamrur = Instantiate(tamrur, temp, Quaternion.Euler(new Vector3((float)-90, rotation, 0))) as GameObject;
+        temptamrur.AddComponent<RectTransform>();
+        temptamrur.AddComponent<BackGroundSpawns>();
     }
     //function that sets the starting values of the objects
     void UpdateVer()

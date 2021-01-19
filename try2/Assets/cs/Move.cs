@@ -9,13 +9,31 @@ using System;
 
 public class Move : MonoBehaviour
 {
-    bool tap, detUp, detLe, detRi, detDo;
-    float left, right, FrameAmount, distanceFromGround;
     public Transform Player;
-    Vector2 startTouchPosition, endTouchPosition;
-    public static bool isGrounded, swipeLeft, swipeRight, secondJump, firstJump, isSlideDown;
-    float playerZ, movePositionPerFrameLR, firstJumpForce, secondJumpForce, slideDownForce;
-    int pixelAmountForSwipe, frameAmountBetwinMovement;
+    public static bool IsGrounded;
+    public static bool SwipeLeft;
+    public static bool SwipeRight;
+    public static bool SecondJump;
+    public static bool FirstJump;
+    public static bool IsSlideDown;
+    bool tap;
+    bool detUp;
+    bool detLe;
+    bool detRi;
+    bool detDo;
+    float left;
+    float right;
+    float frameAmount;
+    float distanceFromGround;
+    float playerZ;
+    float movePositionPerFrameLR;
+    float firstJumpForce;
+    float secondJumpForce;
+    float slideDownForce;
+    Vector2 startTouchPosition;
+    Vector2 endTouchPosition;
+    int pixelAmountForSwipe;
+    int frameAmountBetwinMovement;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,19 +45,19 @@ public class Move : MonoBehaviour
         if (!CollCheck.HasLost && Time.timeScale == 1f)
         {
             Player.position = new Vector3(Player.position.x, Player.position.y, playerZ);
-            if (!swipeRight && !swipeLeft)
+            if (!SwipeRight && !SwipeLeft)
             {
                 float temp = (float)System.Math.Round(Player.position.x);
                 Player.position = new Vector3(temp, Player.position.y, playerZ);
             }
-            FrameAmount++;
+            frameAmount++;
             SwipeCheckInPhone();
 
-            isSlideDown = (detDo || (Input.GetKey(KeyCode.DownArrow)));
-            isGrounded = isOnGround();
-            if (isGrounded)
+            IsSlideDown = (detDo || (Input.GetKey(KeyCode.DownArrow)));
+            IsGrounded = isOnGround();
+            if (IsGrounded)
             {
-                firstJump = secondJump = false;
+                FirstJump = SecondJump = false;
             }
             CheckingIfAbleToMoveThePlayer();
             SettingPositionBasedOnSwipes();
@@ -125,26 +143,26 @@ public class Move : MonoBehaviour
     //moving the character left and right by the data we got from the player
     void SettingPositionBasedOnSwipes()
     {
-        if (swipeLeft)
+        if (SwipeLeft)
         {
-            swipeRight = false;
+            SwipeRight = false;
             //if posiball moving to the left way
             Player.position -= new Vector3(movePositionPerFrameLR, 0, 0);
             if (Player.position.x + 1 <= left)
             {
-                swipeLeft = false;
+                SwipeLeft = false;
                 System.Math.Round(Player.position.x);
                 detLe = false;
             }
         }
-        if (swipeRight)
+        if (SwipeRight)
         {
-            swipeLeft = false;
+            SwipeLeft = false;
             //if posiball moving to the right way
             Player.position += new Vector3(movePositionPerFrameLR, 0, 0);
             if (Player.position.x - 1 >= right)
             {
-                swipeRight = false;
+                SwipeRight = false;
                 System.Math.Round(Player.position.x);
                 detRi = false;
             }
@@ -153,51 +171,51 @@ public class Move : MonoBehaviour
     //checking swipes data
     void CheckingIfAbleToMoveThePlayer()
     {
-        if (FrameAmount >= frameAmountBetwinMovement && (detUp || (Input.GetKey(KeyCode.UpArrow))))
+        if (frameAmount >= frameAmountBetwinMovement && (detUp || (Input.GetKey(KeyCode.UpArrow))))
         {
-            if (!firstJump)
+            if (!FirstJump)
             {
                 Player.position = new Vector3(Player.position.x, Player.position.y + (float)0.1, Player.position.z);
                 GetComponent<Rigidbody>().velocity = new Vector3(0, firstJumpForce, 0);
-                FrameAmount = 0;
+                frameAmount = 0;
                 detUp = false;
-                firstJump = true;
+                FirstJump = true;
             }
-            else if (firstJump && !secondJump && FrameAmount >= frameAmountBetwinMovement)
+            else if (FirstJump && !SecondJump && frameAmount >= frameAmountBetwinMovement)
             {
                 GetComponent<Rigidbody>().velocity = new Vector3(0, secondJumpForce, 0);
-                FrameAmount = 0;
+                frameAmount = 0;
                 detUp = false;
-                secondJump = true;
+                SecondJump = true;
             }
         }
-        if ((FrameAmount >= frameAmountBetwinMovement && (detDo || (Input.GetKey(KeyCode.DownArrow)))))
+        if ((frameAmount >= frameAmountBetwinMovement && (detDo || (Input.GetKey(KeyCode.DownArrow)))))
         {
-            if (!isGrounded)
+            if (!IsGrounded)
             {
                 GetComponent<Rigidbody>().velocity = new Vector3(0, slideDownForce, 0);
-                FrameAmount = 0;
+                frameAmount = 0;
             }
             detDo = false;
         }
-        if (FrameAmount >= frameAmountBetwinMovement && ((!swipeRight && detRi) || (Input.GetKey(KeyCode.RightArrow) && !swipeRight)))
+        if (frameAmount >= frameAmountBetwinMovement && ((!SwipeRight && detRi) || (Input.GetKey(KeyCode.RightArrow) && !SwipeRight)))
         {
-            if ((Player.position.x < 1 && !swipeLeft) && System.Math.Abs(Player.position.x - System.Math.Round(Player.position.x)) < 0.1)
+            if ((Player.position.x < 1 && !SwipeLeft) && System.Math.Abs(Player.position.x - System.Math.Round(Player.position.x)) < 0.1)
             {
-                swipeRight = true;
+                SwipeRight = true;
                 right = Player.position.x;
                 System.Math.Round(right);
-                FrameAmount = 0;
+                frameAmount = 0;
             }
         }
-        if (FrameAmount >= frameAmountBetwinMovement && ((!swipeLeft && detLe) || (Input.GetKey(KeyCode.LeftArrow) && !swipeLeft)))
+        if (frameAmount >= frameAmountBetwinMovement && ((!SwipeLeft && detLe) || (Input.GetKey(KeyCode.LeftArrow) && !SwipeLeft)))
         {
-            if ((Player.position.x > -1 && !swipeRight) && System.Math.Abs(Player.position.x - System.Math.Round(Player.position.x)) < 0.1)
+            if ((Player.position.x > -1 && !SwipeRight) && System.Math.Abs(Player.position.x - System.Math.Round(Player.position.x)) < 0.1)
             {
-                swipeLeft = true;
+                SwipeLeft = true;
                 left = Player.position.x;
                 System.Math.Round(left);
-                FrameAmount = 0;
+                frameAmount = 0;
             }
         }
     }
@@ -217,11 +235,11 @@ public class Move : MonoBehaviour
                 component.useGravity = true;
         }
 
-        tap = swipeLeft = swipeRight = detUp = detRi = detLe = detDo = firstJump = secondJump = isSlideDown = false;
-        left = right = FrameAmount = 0;
+        tap = SwipeLeft = SwipeRight = detUp = detRi = detLe = detDo = FirstJump = SecondJump = IsSlideDown = false;
+        left = right = frameAmount = 0;
         Player.position = new Vector3((float)0, (float)0.05, (float)-6);
         distanceFromGround = 0.1f;
-        isGrounded = true;
+        IsGrounded = true;
         playerZ = -6f;
         pixelAmountForSwipe = 100;
         movePositionPerFrameLR = 0.07f;
