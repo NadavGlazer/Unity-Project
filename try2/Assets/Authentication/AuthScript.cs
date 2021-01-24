@@ -43,17 +43,18 @@ public class AuthScript : MonoBehaviour
             {
                 DataSnapshot snapshot = task.Result;
                 LeaderBoards[0] = new LeaderBoard(0, "temp", "0");
-                while (LeaderBoards[0].GetScore() == 0)
+                while (!CheckIfReadFromDBWasSuccessfull())
                 {
                     for (int i = 0; i < 10; i++)
                     {
-                        LeaderBoards[i] = new LeaderBoard(int.Parse(snapshot.Child((i + 1).ToString()).Child("score").Value.ToString()), snapshot.Child((i + 1).ToString()).Child("name").Value.ToString(), snapshot.Child((i + 1).ToString()).Child("ID").Value.ToString());
+                        LeaderBoards[i] = new LeaderBoard(int.Parse(snapshot.Child((i + 1).ToString()).Child("Score").Value.ToString()),
+                            snapshot.Child((i + 1).ToString()).Child("Name").Value.ToString(),
+                            snapshot.Child((i + 1).ToString()).Child("ID").Value.ToString());
                     }
-                }
+                };
             }
         });
-        FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard")
-     .ValueChanged += HandleValueChanged;
+        FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").ValueChanged += HandleValueChanged;
         signInError = "Sign In isn`t successfull";
         registerError = "Register isn`t successfull";
         errortextSign.text = "";
@@ -67,11 +68,13 @@ public class AuthScript : MonoBehaviour
             return;
         }
         LeaderBoards[0] = new LeaderBoard(0, "temp", "0");
-        while (LeaderBoards[0].GetScore() == 0)
+        while (!CheckIfReadFromDBWasSuccessfull())
         {
             for (int i = 0; i < 10; i++)
             {
-                LeaderBoards[i] = new LeaderBoard(int.Parse(args.Snapshot.Child((i + 1).ToString()).Child("score").Value.ToString()), args.Snapshot.Child((i + 1).ToString()).Child("name").Value.ToString(), args.Snapshot.Child((i + 1).ToString()).Child("ID").Value.ToString());
+                LeaderBoards[i] = new LeaderBoard(int.Parse(args.Snapshot.Child((i + 1).ToString()).Child("Score").Value.ToString()),
+                    args.Snapshot.Child((i + 1).ToString()).Child("Name").Value.ToString(),
+                    args.Snapshot.Child((i + 1).ToString()).Child("ID").Value.ToString());
             }
         }
         LeaderBoardCS.HasChanged = true;
@@ -90,7 +93,6 @@ public class AuthScript : MonoBehaviour
     }
     void Register()
     {
-
         auth.CreateUserWithEmailAndPasswordAsync(registerEmail.text.ToString(), registerPassword.text.ToString()).ContinueWith(task =>
         {
             if (task.IsCanceled)
@@ -104,6 +106,7 @@ public class AuthScript : MonoBehaviour
                 errortextRegister.text = registerError;
                 return;
             }
+            errortextRegister.text = "Registering";
 
             // Firebase user has been created.
 
@@ -129,6 +132,8 @@ public class AuthScript : MonoBehaviour
                 errortextSign.text = signInError;
                 return;
             }
+            errortextSign.text = "Signing in";
+
             Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
             reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
             //
@@ -188,6 +193,8 @@ public class AuthScript : MonoBehaviour
         signInEmail.text = "";
         signInPassword.text = "";
         signInPassword.contentType = InputField.ContentType.Password;
+        errortextSign.text = "";
+        errortextRegister.text = "";
     }
     void GoToSignIn()
     {
@@ -197,6 +204,8 @@ public class AuthScript : MonoBehaviour
         registerPassword.text = "";
         newName.text = "";
         signInPassword.contentType = InputField.ContentType.Password;
+        errortextSign.text = "";
+        errortextRegister.text = "";
     }
     void ShowSignInPassword()
     {
@@ -221,6 +230,17 @@ public class AuthScript : MonoBehaviour
             registerPassword.contentType = InputField.ContentType.Password;
         }
         registerPassword.ForceLabelUpdate();
+    }
+    bool CheckIfReadFromDBWasSuccessfull()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            if (LeaderBoards[i].GetScore() == 0)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }
 public class User
