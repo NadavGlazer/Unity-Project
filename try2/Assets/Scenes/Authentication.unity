@@ -3516,8 +3516,8 @@ MonoBehaviour:
   registerPassword: {fileID: 949682511}
   signInPassword: {fileID: 1797967605}
   newName: {fileID: 2072134430}
-  errortextSign: {fileID: 1007473025}
-  errortextRegister: {fileID: 136020238}
+  errorTextSignIn: {fileID: 1007473025}
+  errorTextRegister: {fileID: 136020238}
   registerP: {fileID: 1494157852}
   signInP: {fileID: 584287137}
 --- !u!4 &2031900190
