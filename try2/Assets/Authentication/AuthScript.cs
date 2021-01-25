@@ -63,10 +63,8 @@ public class AuthScript : MonoBehaviour
         registerSuccess = "Registering";
         blankInputError = "Input fields cannot be blank";
         errorMessage.text = "";
-        if (Firebase.Auth.FirebaseAuth.DefaultInstance.CurrentUser != null)
-        {
-            RememberMe();
-        }
+
+        RememberMe();
     }
     void HandleValueChanged(object sender, ValueChangedEventArgs args)
     {
@@ -177,9 +175,9 @@ public class AuthScript : MonoBehaviour
                         tempOwned.Add(int.Parse(snapshot.Child("OwnColors").Child(i.ToString()).Value.ToString()));
                     }
 
-                    tempcoins = int.Parse(snapshot.Child("coins").Value.ToString());
-                    tempBest = int.Parse(snapshot.Child("bestScore").Value.ToString());
-                    tempName = snapshot.Child("name").Value.ToString();
+                    tempcoins = int.Parse(snapshot.Child("Coins").Value.ToString());
+                    tempBest = int.Parse(snapshot.Child("BestScore").Value.ToString());
+                    tempName = snapshot.Child("Name").Value.ToString();
 
                     User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, tempName);
                     Instance = new CurrentUser(temp, auth.CurrentUser.UserId);
@@ -263,47 +261,50 @@ public class AuthScript : MonoBehaviour
     }
     void RememberMe()
     {
-        errorMessage.text = signInSuccess;
-        signInP.SetActive(false);
-
-        Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-        reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
-        //
-        reference.GetValueAsync().ContinueWith(task =>
+        if (Firebase.Auth.FirebaseAuth.DefaultInstance.CurrentUser != null)
         {
-            if (task.IsFaulted)
-            {
-                return;
-            }
-            List<int> tempCurrent = new List<int>();
-            List<int> tempOptional = new List<int>();
-            List<int> tempOwned = new List<int>();
-            int tempcoins = 0;
-            int tempBest = 0;
-            string tempName;
-            DataSnapshot snapshot = task.Result;
-            for (int i = 0; i < 5; i++)
-            {
-                tempCurrent.Add(int.Parse(snapshot.Child("CurrentColor").Child(i.ToString()).Value.ToString()));
-            }
-            for (int i = 0; i < snapshot.Child("OptionalColors").ChildrenCount; i++)
-            {
-                tempOptional.Add(int.Parse(snapshot.Child("OptionalColors").Child(i.ToString()).Value.ToString()));
-            }
-            for (int i = 0; i < snapshot.Child("OwnColors").ChildrenCount; i++)
-            {
-                tempOwned.Add(int.Parse(snapshot.Child("OwnColors").Child(i.ToString()).Value.ToString()));
-            }
+            errorMessage.text = signInSuccess;
+            signInP.SetActive(false);
 
-            tempcoins = int.Parse(snapshot.Child("coins").Value.ToString());
-            tempBest = int.Parse(snapshot.Child("bestScore").Value.ToString());
-            tempName = snapshot.Child("name").Value.ToString();
+            Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+            reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
+            print(1);
+            //
+            reference.GetValueAsync().ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    return;
+                }
+                List<int> tempCurrent = new List<int>();
+                List<int> tempOptional = new List<int>();
+                List<int> tempOwned = new List<int>();
+                int tempcoins = 0;
+                int tempBest = 0;
+                string tempName;
+                DataSnapshot snapshot = task.Result;
+                for (int i = 0; i < 5; i++)
+                {
+                    tempCurrent.Add(int.Parse(snapshot.Child("CurrentColor").Child(i.ToString()).Value.ToString()));
+                }
+                for (int i = 0; i < snapshot.Child("OptionalColors").ChildrenCount; i++)
+                {
+                    tempOptional.Add(int.Parse(snapshot.Child("OptionalColors").Child(i.ToString()).Value.ToString()));
+                }
+                for (int i = 0; i < snapshot.Child("OwnColors").ChildrenCount; i++)
+                {
+                    tempOwned.Add(int.Parse(snapshot.Child("OwnColors").Child(i.ToString()).Value.ToString()));
+                }
+                print(2);
+                tempcoins = int.Parse(snapshot.Child("Coins").Value.ToString());
+                tempBest = int.Parse(snapshot.Child("BestScore").Value.ToString());
+                tempName = snapshot.Child("Name").Value.ToString();
 
-            User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, tempName);
-            Instance = new CurrentUser(temp, auth.CurrentUser.UserId);
-            moveScene = true;
-
-        });
+                User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, tempName);
+                Instance = new CurrentUser(temp, auth.CurrentUser.UserId);
+                moveScene = true;
+            });
+        }
     }
 }
 public class User
