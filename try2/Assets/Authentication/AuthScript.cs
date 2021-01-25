@@ -17,15 +17,16 @@ public class AuthScript : MonoBehaviour
     public InputField registerPassword;
     public InputField signInPassword;
     public InputField newName;
-    public Text errorTextSignIn;
-    public Text errorTextRegister;
+    public Text errorMessage;
     public GameObject registerP;
     public GameObject signInP;
     bool moveScene;
     public static CurrentUser Instance;
     public static LeaderBoard[] LeaderBoards;
     string signInError;
+    string signInSuccess;
     string registerError;
+    string registerSuccess;
     string blankInputError;
     // Start is called before the first frame update
     void Start()
@@ -57,10 +58,15 @@ public class AuthScript : MonoBehaviour
         });
         FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").ValueChanged += HandleValueChanged;
         signInError = "Sign In isn`t successfull";
+        signInSuccess = "Signing in";
         registerError = "Register isn`t successfull";
+        registerSuccess = "Registering";
         blankInputError = "Input fields cannot be blank";
-        errorTextSignIn.text = "";
-        errorTextRegister.text = "";
+        errorMessage.text = "";
+        if (Firebase.Auth.FirebaseAuth.DefaultInstance.CurrentUser != null)
+        {
+            RememberMe();
+        }
     }
     void HandleValueChanged(object sender, ValueChangedEventArgs args)
     {
@@ -86,8 +92,8 @@ public class AuthScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        errorTextSignIn.SetAllDirty();
-        errorTextRegister.SetAllDirty();
+        errorMessage.SetAllDirty();
+        errorMessage.SetAllDirty();
         if (moveScene)
         {
             SceneManager.LoadScene("MainMenu");
@@ -101,16 +107,15 @@ public class AuthScript : MonoBehaviour
             {
                 if (task.IsCanceled)
                 {
-                    errorTextRegister.text = registerError;
+                    errorMessage.text = registerError;
 
                     return;
                 }
                 if (task.IsFaulted)
                 {
-                    errorTextRegister.text = registerError;
+                    errorMessage.text = registerError;
                     return;
                 }
-                errorTextRegister.text = "Registering";
 
                 // Firebase user has been created.
 
@@ -119,11 +124,12 @@ public class AuthScript : MonoBehaviour
 
                 WriteNewUserInDb(auth.CurrentUser.UserId, newName.text.ToString());
                 moveScene = true;
+                errorMessage.text = registerSuccess;
             });
         }
         else
         {
-            errorTextRegister.text = blankInputError;
+            errorMessage.text = blankInputError;
         }
     }
     void SignIn()
@@ -134,58 +140,58 @@ public class AuthScript : MonoBehaviour
             {
                 if (task1.IsCanceled)
                 {
-                    errorTextSignIn.text = signInError;
+                    errorMessage.text = signInError;
                     return;
                 }
                 if (task1.IsFaulted)
                 {
-                    errorTextSignIn.text = signInError;
+                    errorMessage.text = signInError;
                     return;
                 }
-                errorTextSignIn.text = "Signing in";
-
                 Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
                 reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
                 //
                 reference.GetValueAsync().ContinueWith(task =>
-                   {
-                       if (task.IsFaulted)
-                       {
-                           return;
-                       }
-                       List<int> tempCurrent = new List<int>();
-                       List<int> tempOptional = new List<int>();
-                       List<int> tempOwned = new List<int>();
-                       int tempcoins = 0;
-                       int tempBest = 0;
-                       string tempName;
-                       DataSnapshot snapshot = task.Result;
-                       for (int i = 0; i < 5; i++)
-                       {
-                           tempCurrent.Add(int.Parse(snapshot.Child("CurrentColor").Child(i.ToString()).Value.ToString()));
-                       }
-                       for (int i = 0; i < snapshot.Child("OptionalColors").ChildrenCount; i++)
-                       {
-                           tempOptional.Add(int.Parse(snapshot.Child("OptionalColors").Child(i.ToString()).Value.ToString()));
-                       }
-                       for (int i = 0; i < snapshot.Child("OwnColors").ChildrenCount; i++)
-                       {
-                           tempOwned.Add(int.Parse(snapshot.Child("OwnColors").Child(i.ToString()).Value.ToString()));
-                       }
+                {
+                    if (task.IsFaulted)
+                    {
+                        return;
+                    }
+                    List<int> tempCurrent = new List<int>();
+                    List<int> tempOptional = new List<int>();
+                    List<int> tempOwned = new List<int>();
+                    int tempcoins = 0;
+                    int tempBest = 0;
+                    string tempName;
+                    DataSnapshot snapshot = task.Result;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        tempCurrent.Add(int.Parse(snapshot.Child("CurrentColor").Child(i.ToString()).Value.ToString()));
+                    }
+                    for (int i = 0; i < snapshot.Child("OptionalColors").ChildrenCount; i++)
+                    {
+                        tempOptional.Add(int.Parse(snapshot.Child("OptionalColors").Child(i.ToString()).Value.ToString()));
+                    }
+                    for (int i = 0; i < snapshot.Child("OwnColors").ChildrenCount; i++)
+                    {
+                        tempOwned.Add(int.Parse(snapshot.Child("OwnColors").Child(i.ToString()).Value.ToString()));
+                    }
 
-                       tempcoins = int.Parse(snapshot.Child("coins").Value.ToString());
-                       tempBest = int.Parse(snapshot.Child("bestScore").Value.ToString());
-                       tempName = snapshot.Child("name").Value.ToString();
+                    tempcoins = int.Parse(snapshot.Child("coins").Value.ToString());
+                    tempBest = int.Parse(snapshot.Child("bestScore").Value.ToString());
+                    tempName = snapshot.Child("name").Value.ToString();
 
-                       User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, tempName);
-                       Instance = new CurrentUser(temp, auth.CurrentUser.UserId);
-                       moveScene = true;
-                   });
+                    User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, tempName);
+                    Instance = new CurrentUser(temp, auth.CurrentUser.UserId);
+                    moveScene = true;
+
+                    errorMessage.text = signInSuccess;
+                });
             });
         }
         else
         {
-            errorTextSignIn.text = blankInputError;
+            errorMessage.text = blankInputError;
         }
     }
     void WriteNewUserInDb(string id, string name)
@@ -208,8 +214,7 @@ public class AuthScript : MonoBehaviour
         signInEmail.text = "";
         signInPassword.text = "";
         signInPassword.contentType = InputField.ContentType.Password;
-        errorTextSignIn.text = "";
-        errorTextRegister.text = "";
+        errorMessage.text = "";
     }
     void GoToSignIn()
     {
@@ -219,8 +224,7 @@ public class AuthScript : MonoBehaviour
         registerPassword.text = "";
         newName.text = "";
         signInPassword.contentType = InputField.ContentType.Password;
-        errorTextSignIn.text = "";
-        errorTextRegister.text = "";
+        errorMessage.text = "";
     }
     void ShowSignInPassword()
     {
@@ -256,6 +260,50 @@ public class AuthScript : MonoBehaviour
             }
         }
         return true;
+    }
+    void RememberMe()
+    {
+        errorMessage.text = signInSuccess;
+        signInP.SetActive(false);
+
+        Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+        reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
+        //
+        reference.GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                return;
+            }
+            List<int> tempCurrent = new List<int>();
+            List<int> tempOptional = new List<int>();
+            List<int> tempOwned = new List<int>();
+            int tempcoins = 0;
+            int tempBest = 0;
+            string tempName;
+            DataSnapshot snapshot = task.Result;
+            for (int i = 0; i < 5; i++)
+            {
+                tempCurrent.Add(int.Parse(snapshot.Child("CurrentColor").Child(i.ToString()).Value.ToString()));
+            }
+            for (int i = 0; i < snapshot.Child("OptionalColors").ChildrenCount; i++)
+            {
+                tempOptional.Add(int.Parse(snapshot.Child("OptionalColors").Child(i.ToString()).Value.ToString()));
+            }
+            for (int i = 0; i < snapshot.Child("OwnColors").ChildrenCount; i++)
+            {
+                tempOwned.Add(int.Parse(snapshot.Child("OwnColors").Child(i.ToString()).Value.ToString()));
+            }
+
+            tempcoins = int.Parse(snapshot.Child("coins").Value.ToString());
+            tempBest = int.Parse(snapshot.Child("bestScore").Value.ToString());
+            tempName = snapshot.Child("name").Value.ToString();
+
+            User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, tempName);
+            Instance = new CurrentUser(temp, auth.CurrentUser.UserId);
+            moveScene = true;
+
+        });
     }
 }
 public class User
