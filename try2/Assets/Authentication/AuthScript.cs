@@ -268,7 +268,6 @@ public class AuthScript : MonoBehaviour
 
             Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
             reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
-            print(1);
             //
             reference.GetValueAsync().ContinueWith(task =>
             {
@@ -295,7 +294,6 @@ public class AuthScript : MonoBehaviour
                 {
                     tempOwned.Add(int.Parse(snapshot.Child("OwnColors").Child(i.ToString()).Value.ToString()));
                 }
-                print(2);
                 tempcoins = int.Parse(snapshot.Child("Coins").Value.ToString());
                 tempBest = int.Parse(snapshot.Child("BestScore").Value.ToString());
                 tempName = snapshot.Child("Name").Value.ToString();
@@ -309,12 +307,16 @@ public class AuthScript : MonoBehaviour
 }
 public class User
 {
-    public int Coins;
-    public List<int> OwnColors;
-    public List<int> CurrentColor;
-    public List<int> OptionalColors;
-    public int BestScore;
-    public string Name;
+    private int Coins;
+    private List<int> OwnColors;
+    private List<int> CurrentColor;
+    private List<int> OptionalColors;
+    private int BestScore;
+    private string Name;
+    public User()
+    {
+
+    }
     public User(string name)
     {
         Coins = 200;
@@ -409,9 +411,13 @@ public class User
 }
 public class LeaderBoard
 {
-    public int Score;
-    public string Name;
-    public string ID;
+    private int Score;
+    private string Name;
+    private string ID;
+    public LeaderBoard()
+    {
+
+    }
     public LeaderBoard(int score, string name, string ID)
     {
         this.Score = score;
@@ -451,8 +457,12 @@ public class LeaderBoard
 }
 public class CurrentUser
 {
-    public User User;
-    public string UserID;
+    private User User;
+    private string UserID;
+    public CurrentUser()
+    {
+
+    }
     public CurrentUser(List<int> current, List<int> optional, List<int> own, int coins, string id, int best, string name)
     {
         User = new User(coins, own, current, optional, best, name);
