@@ -45,7 +45,7 @@ public class CollCheck : MonoBehaviour
     {
         HasLost = false;
         topOfCrate = 0.41;
-        topOfTrain = 0.69;
+        topOfTrain = 1.1;
         trainCloneName = "Train(Clone)";
         crateCloneName = "Crate(Clone)";
     }

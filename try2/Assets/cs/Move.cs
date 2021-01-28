@@ -10,6 +10,7 @@ using System;
 public class Move : MonoBehaviour
 {
     public Transform Player;
+    public GameObject Camera;
     public static bool IsGrounded;
     public static bool SwipeLeft;
     public static bool SwipeRight;
@@ -61,6 +62,7 @@ public class Move : MonoBehaviour
             }
             CheckingIfAbleToMoveThePlayer();
             SettingPositionBasedOnSwipes();
+            Camera.transform.position = new Vector3(Player.position.x, Player.position.y + 1.8f, Camera.transform.position.z);
         }
     }
     // detecting swipes in phone and its direction
@@ -244,8 +246,8 @@ public class Move : MonoBehaviour
         pixelAmountForSwipe = 100;
         movePositionPerFrameLR = 0.07f;
         frameAmountBetwinMovement = 5;
-        firstJumpForce = 3.5f;
-        secondJumpForce = 3f;
+        firstJumpForce = 3f;
+        secondJumpForce = 2f;
         slideDownForce = -3.5f;
     }
 }

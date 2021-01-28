@@ -31,6 +31,11 @@ public class AuthScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //for (int i = 1; i < 11; i++)
+        //{
+        //    string json = JsonUtility.ToJson(new LeaderBoard(1, "temp", "0"));
+        //    FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child(i.ToString()).SetRawJsonValueAsync(json);
+        //}
         auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         reference = FirebaseDatabase.DefaultInstance.RootReference;
         moveScene = false;
@@ -66,6 +71,16 @@ public class AuthScript : MonoBehaviour
 
         RememberMe();
     }
+
+    // Update is called once per frame
+    void Update()
+    {
+        errorMessage.SetAllDirty();
+        if (moveScene)
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+    }
     void HandleValueChanged(object sender, ValueChangedEventArgs args)
     {
         if (args.DatabaseError != null)
@@ -84,18 +99,6 @@ public class AuthScript : MonoBehaviour
             }
         }
         LeaderBoardCS.HasChanged = true;
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        errorMessage.SetAllDirty();
-        errorMessage.SetAllDirty();
-        if (moveScene)
-        {
-            SceneManager.LoadScene("MainMenu");
-        }
     }
     void Register()
     {
@@ -307,12 +310,12 @@ public class AuthScript : MonoBehaviour
 }
 public class User
 {
-    private int Coins;
-    private List<int> OwnColors;
-    private List<int> CurrentColor;
-    private List<int> OptionalColors;
-    private int BestScore;
-    private string Name;
+    public string Name;
+    public int Coins;
+    public int BestScore;
+    public List<int> OwnColors;
+    public List<int> CurrentColor;
+    public List<int> OptionalColors;
     public User()
     {
 
@@ -411,9 +414,9 @@ public class User
 }
 public class LeaderBoard
 {
-    private int Score;
-    private string Name;
-    private string ID;
+    public int Score;
+    public string Name;
+    public string ID;
     public LeaderBoard()
     {
 
@@ -457,8 +460,8 @@ public class LeaderBoard
 }
 public class CurrentUser
 {
-    private User User;
-    private string UserID;
+    public User User;
+    public string UserID;
     public CurrentUser()
     {
 
@@ -501,4 +504,3 @@ public class CurrentUser
         return UserID;
     }
 }
-

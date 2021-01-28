@@ -10,6 +10,7 @@ public class ObstacleMovement : MonoBehaviour
     float acceleration;
     float trainAcc;
     float crateAcc;
+    float distanceFromLastTrain;
     string trainCloneName;
     string crateCloneName;
     int trainZOfDestruction;
@@ -50,7 +51,7 @@ public class ObstacleMovement : MonoBehaviour
                         transform.GetComponent<Transform>().position -= new Vector3(0, 0, acceleration * crateAcc);
                     }
                 }
-                if (transform.GetComponent<Transform>().position.z < 7f && transform.name == trainCloneName && first)
+                if (transform.GetComponent<Transform>().position.z < distanceFromLastTrain && transform.name == trainCloneName && first)
                 {
                     ObstacleSpawner.CanSpawn = true;
                     first = false;
@@ -72,5 +73,6 @@ public class ObstacleMovement : MonoBehaviour
         trainAcc = 1.1f;
         crateAcc = 1f;
         first = true;
+        distanceFromLastTrain = 6f;
     }
 }

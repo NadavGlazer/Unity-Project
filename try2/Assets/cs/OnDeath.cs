@@ -23,12 +23,12 @@ public class OnDeath : MonoBehaviour
     {
         if (Animations.DeathAnimationFinished && first)
         {
-            int temp = (int)Math.Round(SetUp.TotalRun / 10 + UnityEngine.Random.Range(-SetUp.TotalRun / 15, SetUp.TotalRun / 15));
-            AuthScript.Instance.GetUser().ChangeCoins(temp);
+            int newCoins = (int)Math.Round(SetUp.TotalRun / 10 + UnityEngine.Random.Range(-SetUp.TotalRun / 15, SetUp.TotalRun / 15));
+            AuthScript.Instance.GetUser().ChangeCoins(newCoins);
 
             int score = (int)Math.Round(SetUp.TotalRun);
             scoreText.text = textUI[0] + score;
-            coinText.text = textUI[1] + temp;
+            coinText.text = textUI[1] + newCoins;
             totalCoinsText.text = textUI[2] + AuthScript.Instance.GetUser().GetCoins();
 
             if (score > AuthScript.Instance.GetUser().GetBestScore())
@@ -40,6 +40,9 @@ public class OnDeath : MonoBehaviour
             UpdateLeaderBoard(score, AuthScript.Instance.GetUser().GetName());
 
             first = false;
+            scoreText.SetAllDirty();
+            coinText.SetAllDirty();
+            totalCoinsText.SetAllDirty();
         }
     }
     //starting new game
@@ -47,8 +50,6 @@ public class OnDeath : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("Game");
-        //Application.LoadLevel(Application.loadedLevel);
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     void UpdateUser(User user)
     {
@@ -67,6 +68,7 @@ public class OnDeath : MonoBehaviour
             AuthScript.LeaderBoards[9].SetName(newName);
             AuthScript.LeaderBoards[9].SetId(AuthScript.Instance.GetUserId());
         }
+
         LeaderBoard temp;
         for (int i = 0; i < AuthScript.LeaderBoards.Length - 1; i++)
         {
@@ -80,16 +82,12 @@ public class OnDeath : MonoBehaviour
                 }
             }
         }
-        FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child("1").SetRawJsonValueAsync(JsonUtility.ToJson(AuthScript.LeaderBoards[0]));
-        FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child("2").SetRawJsonValueAsync(JsonUtility.ToJson(AuthScript.LeaderBoards[1]));
-        FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child("3").SetRawJsonValueAsync(JsonUtility.ToJson(AuthScript.LeaderBoards[2]));
-        FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child("4").SetRawJsonValueAsync(JsonUtility.ToJson(AuthScript.LeaderBoards[3]));
-        FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child("5").SetRawJsonValueAsync(JsonUtility.ToJson(AuthScript.LeaderBoards[4]));
-        FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child("6").SetRawJsonValueAsync(JsonUtility.ToJson(AuthScript.LeaderBoards[5]));
-        FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child("7").SetRawJsonValueAsync(JsonUtility.ToJson(AuthScript.LeaderBoards[6]));
-        FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child("8").SetRawJsonValueAsync(JsonUtility.ToJson(AuthScript.LeaderBoards[7]));
-        FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child("9").SetRawJsonValueAsync(JsonUtility.ToJson(AuthScript.LeaderBoards[8]));
-        FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child("10").SetRawJsonValueAsync(JsonUtility.ToJson(AuthScript.LeaderBoards[9]));
+
+        for (int i = 1; i < 11; i++)
+        {
+            FirebaseDatabase.DefaultInstance.RootReference.Child("LeaderBoard").Child(i.ToString())
+                .SetRawJsonValueAsync(JsonUtility.ToJson(AuthScript.LeaderBoards[i - 1]));
+        }
     }
     void UpdateVer()
     {
@@ -99,5 +97,4 @@ public class OnDeath : MonoBehaviour
         textUI[1] = "coins earned: ";
         textUI[2] = "coins: ";
     }
-
 }

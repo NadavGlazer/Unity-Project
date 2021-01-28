@@ -35,7 +35,7 @@ public class ObstacleSpawner : MonoBehaviour
         {
             if (Time.time > nextSpawn && CanSpawn)
             {
-                whatTemplate = Random.Range(1, 7);
+                whatTemplate = Random.Range(1, 6);
                 switch (whatTemplate)
                 {
                     case 1:
@@ -59,11 +59,6 @@ public class ObstacleSpawner : MonoBehaviour
                         break;
                     case 5:
                         SpawnTrain(1);
-                        SpawnTrain(-1);
-                        break;
-                    case 6:
-                        SpawnTrain(1);
-                        SpawnTrain(0);
                         SpawnTrain(-1);
                         break;
                 }
@@ -136,9 +131,9 @@ public class ObstacleSpawner : MonoBehaviour
         boxColliderCenter = new Vector3((float)0, (float)1.145, (float)0);
         transform.position = new Vector3(0, 0, (float)12);
         trainColliderCenter = new Vector3(0, 0, 0.02f);
-        trainY = 0.37f;
+        trainY = 0.63f;
         boxY = -0.01f;
-        trainLocalScale = new Vector3((float)1.5, (float)1, (float)1.5);
+        trainLocalScale = new Vector3((float)1.8, (float)2, (float)1.8);
         crateLocalScale = new Vector3((float)0.3, (float)0.3, (float)0.3);
         CanSpawn = true;
         first = true;
