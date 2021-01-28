@@ -81,7 +81,7 @@ public class ObstacleSpawner : MonoBehaviour
                 }
                 else
                 {
-                    nextSpawn = Time.time + Random.Range(1.0f, 3.0f);
+                    nextSpawn = Time.time + Random.Range(2f, 4.0f);
                 }
 
                 CanSpawn = false;
