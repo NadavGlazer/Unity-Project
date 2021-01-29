@@ -23,7 +23,7 @@ public class OnDeath : MonoBehaviour
     {
         if (Animations.DeathAnimationFinished && first)
         {
-            int newCoins = (int)Math.Round(SetUp.TotalRun / 10 + UnityEngine.Random.Range(-SetUp.TotalRun / 15, SetUp.TotalRun / 15));
+            int newCoins = InGameUpdates.CoinsInCurrentRun;
             AuthScript.Instance.GetUser().ChangeCoins(newCoins);
 
             int score = (int)Math.Round(SetUp.TotalRun);
