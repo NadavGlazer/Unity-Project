@@ -60,24 +60,47 @@ public class CoinsAction : MonoBehaviour
     {
         if (Physics.Raycast(transform.GetComponent<Transform>().position, Vector3.forward, out hitInfo, distanceFromObstacles) && !onBox && !onTrain)
         {
-            if (hitInfo.collider.gameObject.name == boxCloneName)
+            if (transform.GetComponent<Transform>().position.z > -7)
             {
-                transform.GetComponent<Transform>().position = new Vector3(coinX, coinY, transform.GetComponent<Transform>().position.z - 1.3f);
+                if (hitInfo.collider.gameObject.name == boxCloneName)
+                {
+                    transform.GetComponent<Transform>().position = new Vector3(coinX, coinY, transform.GetComponent<Transform>().position.z - 1.3f);
+                }
+                else if (hitInfo.collider.gameObject.name == trainCloneName)
+                {
+                    transform.GetComponent<Transform>().position = new Vector3(coinX, coinY, transform.GetComponent<Transform>().position.z - 2.3f);
+                }
             }
             else if (hitInfo.collider.gameObject.name == trainCloneName)
             {
-                transform.GetComponent<Transform>().position = new Vector3(coinX, coinY, transform.GetComponent<Transform>().position.z - 2.3f);
+                onTrain = true;
             }
         }
         else if (Physics.Raycast(transform.GetComponent<Transform>().position, Vector3.back, out hitInfo, distanceFromObstacles) && !onBox && !onTrain)
         {
-            if (hitInfo.collider.gameObject.name == boxCloneName)
+            if (transform.GetComponent<Transform>().position.z > -7)
             {
-                transform.GetComponent<Transform>().position = new Vector3(coinX, coinY, transform.GetComponent<Transform>().position.z + 1.3f);
+                if (hitInfo.collider.gameObject.name == boxCloneName)
+                {
+                    transform.GetComponent<Transform>().position = new Vector3(coinX, coinY, transform.GetComponent<Transform>().position.z + 1.3f);
+                }
+                else if (hitInfo.collider.gameObject.name == trainCloneName)
+                {
+                    transform.GetComponent<Transform>().position = new Vector3(coinX, coinY, transform.GetComponent<Transform>().position.z + 2.3f);
+                }
             }
             else if (hitInfo.collider.gameObject.name == trainCloneName)
             {
-                transform.GetComponent<Transform>().position = new Vector3(coinX, coinY, transform.GetComponent<Transform>().position.z + 2.3f);
+                onTrain = true;
+            }
+        }
+        if (Physics.Raycast(transform.GetComponent<Transform>().position, Vector3.down, out hitInfo, 0.45f))
+        {
+            if (hitInfo.collider.gameObject.name != boxCloneName && hitInfo.collider.gameObject.name != trainCloneName &&
+                transform.GetComponent<Transform>().position.y > 0.5f)
+            {
+                Destroy(this.gameObject);
+                exit = true;
             }
         }
     }

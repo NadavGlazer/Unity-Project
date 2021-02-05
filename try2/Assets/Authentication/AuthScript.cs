@@ -12,14 +12,21 @@ public class AuthScript : MonoBehaviour
 {
     Firebase.Auth.FirebaseAuth auth;
     DatabaseReference reference;
-    public InputField signInEmail;
-    public InputField registerEmail;
-    public InputField registerPassword;
-    public InputField signInPassword;
-    public InputField newName;
-    public Text errorMessage;
-    public GameObject registerP;
-    public GameObject signInP;
+    public InputField SignInEmail;
+    public InputField RegisterEmail;
+    public InputField RegisterPassword;
+    public InputField SignInPassword;
+    public InputField NewName;
+    public Text SignInResultMessage;
+    public Text RegisterResultMessage;
+    public GameObject RegisterP;
+    public GameObject SignInP;
+    public GameObject SignInErrorImage;
+    public GameObject RegisterErrorImage;
+    public GameObject SignInSHButton;
+    public GameObject RegisterSHButton;
+    public Sprite ShowPasswordImage;
+    public Sprite HidePasswordImage;
     bool moveScene;
     public static CurrentUser Instance;
     public static LeaderBoard[] LeaderBoards;
@@ -67,7 +74,7 @@ public class AuthScript : MonoBehaviour
         registerError = "Register isn`t successfull";
         registerSuccess = "Registering";
         blankInputError = "Input fields cannot be blank";
-        errorMessage.text = "";
+        SignInResultMessage.text = "";
 
         RememberMe();
     }
@@ -75,7 +82,8 @@ public class AuthScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        errorMessage.SetAllDirty();
+        SignInResultMessage.SetAllDirty();
+        RegisterResultMessage.SetAllDirty();
         if (moveScene)
         {
             SceneManager.LoadScene("MainMenu");
@@ -102,53 +110,60 @@ public class AuthScript : MonoBehaviour
     }
     void Register()
     {
-        if (!(registerEmail.text.ToString() == "" && registerPassword.text.ToString() == "") && newName.text.ToString() != null)
+        if (!(RegisterEmail.text.ToString() == "" && RegisterPassword.text.ToString() == "") && NewName.text.ToString() != null)
         {
-            auth.CreateUserWithEmailAndPasswordAsync(registerEmail.text.ToString(), registerPassword.text.ToString()).ContinueWith(task =>
+            auth.CreateUserWithEmailAndPasswordAsync(RegisterEmail.text.ToString(), RegisterPassword.text.ToString()).ContinueWith(task =>
             {
                 if (task.IsCanceled)
                 {
-                    errorMessage.text = registerError;
-
+                    RegisterResultMessage.text = registerError;
+                    RegisterErrorImage.SetActive(true);
                     return;
                 }
                 if (task.IsFaulted)
                 {
-                    errorMessage.text = registerError;
+                    RegisterResultMessage.text = registerError;
+                    RegisterErrorImage.SetActive(true);
                     return;
                 }
+
+                RegisterResultMessage.text = registerSuccess;
 
                 // Firebase user has been created.
 
                 Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
                 reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
 
-                WriteNewUserInDb(auth.CurrentUser.UserId, newName.text.ToString());
+                WriteNewUserInDb(auth.CurrentUser.UserId, NewName.text.ToString());
                 moveScene = true;
-                errorMessage.text = registerSuccess;
             });
         }
         else
         {
-            errorMessage.text = blankInputError;
+            RegisterResultMessage.text = blankInputError;
+            RegisterErrorImage.SetActive(true);
         }
     }
     void SignIn()
     {
-        if (!(signInEmail.text.ToString() == "" || signInPassword.text.ToString() == ""))
+        if (!(SignInEmail.text.ToString() == "" || SignInPassword.text.ToString() == ""))
         {
-            auth.SignInWithEmailAndPasswordAsync(signInEmail.text.ToString(), signInPassword.text.ToString()).ContinueWith(task1 =>
+            auth.SignInWithEmailAndPasswordAsync(SignInEmail.text.ToString(), SignInPassword.text.ToString()).ContinueWith(task1 =>
             {
                 if (task1.IsCanceled)
                 {
-                    errorMessage.text = signInError;
+                    SignInResultMessage.text = signInError;
+                    SignInErrorImage.SetActive(true);
                     return;
                 }
                 if (task1.IsFaulted)
                 {
-                    errorMessage.text = signInError;
+                    SignInResultMessage.text = signInError;
+                    SignInErrorImage.SetActive(true);
                     return;
                 }
+                SignInResultMessage.text = signInSuccess;
+
                 Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
                 reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
                 //
@@ -186,13 +201,13 @@ public class AuthScript : MonoBehaviour
                     Instance = new CurrentUser(temp, auth.CurrentUser.UserId);
                     moveScene = true;
 
-                    errorMessage.text = signInSuccess;
                 });
             });
         }
         else
         {
-            errorMessage.text = blankInputError;
+            SignInResultMessage.text = blankInputError;
+            SignInErrorImage.SetActive(true);
         }
     }
     void WriteNewUserInDb(string id, string name)
@@ -208,48 +223,52 @@ public class AuthScript : MonoBehaviour
 
         Instance = new CurrentUser(user, id);
     }
-    void GoToCreateNewUser()
+    public void GoToRegister()
     {
-        registerP.SetActive(true);
-        signInP.SetActive(false);
-        signInEmail.text = "";
-        signInPassword.text = "";
-        signInPassword.contentType = InputField.ContentType.Password;
-        errorMessage.text = "";
+        RegisterP.SetActive(true);
+        SignInP.SetActive(false);
+        SignInEmail.text = "";
+        SignInPassword.text = "";
+        SignInPassword.contentType = InputField.ContentType.Password;
+        RegisterResultMessage.text = "";
     }
     void GoToSignIn()
     {
-        registerP.SetActive(false);
-        signInP.SetActive(true);
-        registerEmail.text = "";
-        registerPassword.text = "";
-        newName.text = "";
-        signInPassword.contentType = InputField.ContentType.Password;
-        errorMessage.text = "";
+        RegisterP.SetActive(false);
+        SignInP.SetActive(true);
+        RegisterEmail.text = "";
+        RegisterPassword.text = "";
+        NewName.text = "";
+        SignInPassword.contentType = InputField.ContentType.Password;
+        SignInResultMessage.text = "";
     }
     void ShowSignInPassword()
     {
-        if (signInPassword.contentType == InputField.ContentType.Password)
+        if (SignInPassword.contentType == InputField.ContentType.Password)
         {
-            signInPassword.contentType = InputField.ContentType.Standard;
+            SignInPassword.contentType = InputField.ContentType.Standard;
+            SignInSHButton.GetComponent<Image>().sprite = ShowPasswordImage;
         }
         else
         {
-            signInPassword.contentType = InputField.ContentType.Password;
+            SignInPassword.contentType = InputField.ContentType.Password;
+            SignInSHButton.GetComponent<Image>().sprite = HidePasswordImage;
         }
-        signInPassword.ForceLabelUpdate();
+        SignInPassword.ForceLabelUpdate();
     }
-    void ShowRegisterPassword()
+    public void ShowRegisterPassword()
     {
-        if (registerPassword.contentType == InputField.ContentType.Password)
+        if (RegisterPassword.contentType == InputField.ContentType.Password)
         {
-            registerPassword.contentType = InputField.ContentType.Standard;
+            RegisterPassword.contentType = InputField.ContentType.Standard;
+            RegisterSHButton.GetComponent<Image>().sprite = ShowPasswordImage;
         }
         else
         {
-            registerPassword.contentType = InputField.ContentType.Password;
+            RegisterPassword.contentType = InputField.ContentType.Password;
+            RegisterSHButton.GetComponent<Image>().sprite = HidePasswordImage;
         }
-        registerPassword.ForceLabelUpdate();
+        RegisterPassword.ForceLabelUpdate();
     }
     bool CheckIfReadFromDBWasSuccessfull()
     {
@@ -266,8 +285,7 @@ public class AuthScript : MonoBehaviour
     {
         if (Firebase.Auth.FirebaseAuth.DefaultInstance.CurrentUser != null)
         {
-            errorMessage.text = signInSuccess;
-            signInP.SetActive(false);
+            SignInP.SetActive(false);
 
             Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
             reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
@@ -306,6 +324,16 @@ public class AuthScript : MonoBehaviour
                 moveScene = true;
             });
         }
+    }
+    public void OnFixInputFieldSignIn()
+    {
+        SignInResultMessage.text = "";
+        SignInErrorImage.SetActive(false);
+    }
+    public void OnFixInputFieldRegister()
+    {
+        RegisterResultMessage.text = "";
+        RegisterErrorImage.SetActive(false);
     }
 }
 public class User

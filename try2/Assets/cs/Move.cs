@@ -248,6 +248,6 @@ public class Move : MonoBehaviour
         frameAmountBetwinMovement = 5;
         firstJumpForce = 3.5f;
         secondJumpForce = 2f;
-        slideDownForce = -3.5f;
+        slideDownForce = -4f;
     }
 }
