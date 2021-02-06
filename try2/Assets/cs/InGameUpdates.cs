@@ -8,7 +8,9 @@ public class InGameUpdates : MonoBehaviour
 {
     public static int CoinsInCurrentRun;
     public Text TotalMeters;
+    public Text TotalMetersOnPause;
     public Text CurrentCoins;
+    public Text CurrentCoinsOnPause;
     string temp;
 
     void Start()
@@ -28,7 +30,9 @@ public class InGameUpdates : MonoBehaviour
         }
         temp += Math.Round(SetUp.TotalRun) + " ";
         TotalMeters.text = temp;
+        TotalMetersOnPause.text = temp;
 
         CurrentCoins.text = CoinsInCurrentRun.ToString();
+        CurrentCoinsOnPause.text = CoinsInCurrentRun.ToString();
     }
 }

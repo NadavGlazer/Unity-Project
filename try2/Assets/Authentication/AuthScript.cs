@@ -231,6 +231,8 @@ public class AuthScript : MonoBehaviour
         SignInPassword.text = "";
         SignInPassword.contentType = InputField.ContentType.Password;
         RegisterResultMessage.text = "";
+        SignInErrorImage.SetActive(false);
+        RegisterErrorImage.SetActive(false);
     }
     void GoToSignIn()
     {
@@ -241,6 +243,8 @@ public class AuthScript : MonoBehaviour
         NewName.text = "";
         SignInPassword.contentType = InputField.ContentType.Password;
         SignInResultMessage.text = "";
+        SignInErrorImage.SetActive(false);
+        RegisterErrorImage.SetActive(false);
     }
     void ShowSignInPassword()
     {
