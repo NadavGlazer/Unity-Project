@@ -1500,10 +1500,10 @@ RectTransform:
   m_Father: {fileID: 1494157853}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -58.500244, y: -114.85919}
-  m_SizeDelta: {x: -386.9995, y: -1829.7184}
+  m_SizeDelta: {x: 693.0005, y: 90.28162}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1039855267
 CanvasRenderer:
@@ -1579,7 +1579,7 @@ RectTransform:
   m_Children:
   - {fileID: 517593610}
   m_Father: {fileID: 1494157853}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2617,8 +2617,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1132638615}
   - {fileID: 1995016727}
+  - {fileID: 1132638615}
   - {fileID: 928680472}
   - {fileID: 949682508}
   - {fileID: 2072134427}
@@ -2728,7 +2728,7 @@ MonoBehaviour:
   m_Color: {r: 0.3257387, g: 0.3773585, b: 0.3544104, a: 0.84313726}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2736,8 +2736,8 @@ MonoBehaviour:
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
+  m_FillMethod: 2
+  m_FillAmount: 0.78
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -3859,7 +3859,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1494157853}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
