@@ -46,7 +46,7 @@ public class SetUp : MonoBehaviour
 
                 //accelerating by the time         
 
-                if (TotalAcceleration <= maxACC && Frames % 10 == 0)
+                if (TotalAcceleration <= maxACC && Frames % 5 == 0)
                 {
                     TotalAcceleration = (TotalAcceleration + Time.deltaTime / 40) * Time.timeScale;
                 }

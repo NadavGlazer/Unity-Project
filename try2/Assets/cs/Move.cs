@@ -245,7 +245,7 @@ public class Move : MonoBehaviour
         playerZ = -6f;
         pixelAmountForSwipe = 100;
         movePositionPerFrameLR = 0.07f;
-        frameAmountBetwinMovement = 5;
+        frameAmountBetwinMovement = 1;
         firstJumpForce = 3.5f;
         secondJumpForce = 2f;
         slideDownForce = -4f;

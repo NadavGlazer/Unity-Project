@@ -60,7 +60,7 @@ public class CoinsAction : MonoBehaviour
     {
         if (Physics.Raycast(transform.GetComponent<Transform>().position, Vector3.forward, out hitInfo, distanceFromObstacles) && !onBox && !onTrain)
         {
-            if (transform.GetComponent<Transform>().position.z > -7)
+            if (transform.GetComponent<Transform>().position.z > 5)
             {
                 if (hitInfo.collider.gameObject.name == boxCloneName)
                 {
@@ -78,7 +78,7 @@ public class CoinsAction : MonoBehaviour
         }
         else if (Physics.Raycast(transform.GetComponent<Transform>().position, Vector3.back, out hitInfo, distanceFromObstacles) && !onBox && !onTrain)
         {
-            if (transform.GetComponent<Transform>().position.z > -7)
+            if (transform.GetComponent<Transform>().position.z > 5)
             {
                 if (hitInfo.collider.gameObject.name == boxCloneName)
                 {
