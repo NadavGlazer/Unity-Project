@@ -13,8 +13,11 @@ public class OnDeath : MonoBehaviour
     public Text scoreText;
     public Text coinText;
     public Text totalCoinsText;
+    public GameObject MassageText;
     bool first;
-    string[] textUI;
+    string newBestScoreText;
+    string newLeaderBoardScoreText;
+    float timerCount;
     void Start()
     {
         UpdateVer();
@@ -27,9 +30,9 @@ public class OnDeath : MonoBehaviour
             AuthScript.Instance.GetUser().ChangeCoins(newCoins);
 
             int score = (int)Math.Round(SetUp.TotalRun);
-            scoreText.text = textUI[0] + score;
-            coinText.text = textUI[1] + newCoins;
-            totalCoinsText.text = textUI[2] + AuthScript.Instance.GetUser().GetCoins();
+            scoreText.text = score.ToString();
+            coinText.text = newCoins.ToString();
+            totalCoinsText.text = AuthScript.Instance.GetUser().GetCoins().ToString();
 
             if (score > AuthScript.Instance.GetUser().GetBestScore())
             {
@@ -44,6 +47,11 @@ public class OnDeath : MonoBehaviour
             coinText.SetAllDirty();
             totalCoinsText.SetAllDirty();
         }
+        if (timerCount < Time.time)
+        {
+            MassageText.SetActive(false);
+        }
+
     }
     //starting new game
     public void PlayAgain()
@@ -60,10 +68,18 @@ public class OnDeath : MonoBehaviour
     {
         if (newScore < AuthScript.LeaderBoards[9].GetScore())
         {
+            if (newScore > AuthScript.Instance.GetUser().GetBestScore())
+            {
+                MassageText.GetComponent<Text>().text = newBestScoreText;
+                MassageText.GetComponent<Text>().SetAllDirty();
+            }
             return;
         }
         else
         {
+            MassageText.GetComponent<Text>().text = newLeaderBoardScoreText;
+            MassageText.GetComponent<Text>().SetAllDirty();
+
             AuthScript.LeaderBoards[9].SetScore(newScore);
             AuthScript.LeaderBoards[9].SetName(newName);
             AuthScript.LeaderBoards[9].SetId(AuthScript.Instance.GetUserId());
@@ -92,9 +108,9 @@ public class OnDeath : MonoBehaviour
     void UpdateVer()
     {
         first = true;
-        textUI = new string[3];
-        textUI[0] = "score: ";
-        textUI[1] = "coins earned: ";
-        textUI[2] = "coins: ";
+        newBestScoreText = " You have new best score!";
+        newLeaderBoardScoreText = " You have new leaderboard score!";
+        timerCount = Time.time + 3f;
+        MassageText.GetComponent<Text>().text = "";
     }
 }

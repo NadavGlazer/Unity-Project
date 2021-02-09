@@ -95,5 +95,10 @@ public class PauseMenu : MonoBehaviour
     {
         SceneManager.LoadScene("LeaderBoard");
     }
+    public void GoToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+
+    }
 
 }
