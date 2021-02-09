@@ -19,8 +19,10 @@ public class AuthScript : MonoBehaviour
     public InputField NewName;
     public Text SignInResultMessage;
     public Text RegisterResultMessage;
+    public Text RememberMeName;
     public GameObject RegisterP;
     public GameObject SignInP;
+    public GameObject RememberMeP;
     public GameObject SignInErrorImage;
     public GameObject RegisterErrorImage;
     public GameObject SignInSHButton;
@@ -85,6 +87,7 @@ public class AuthScript : MonoBehaviour
     {
         SignInResultMessage.SetAllDirty();
         RegisterResultMessage.SetAllDirty();
+        RememberMeName.SetAllDirty();
         if (moveScene)
         {
             SceneManager.LoadScene("MainMenu");
@@ -257,7 +260,7 @@ public class AuthScript : MonoBehaviour
         else
         {
             SignInPassword.contentType = InputField.ContentType.Password;
-            SignInSHButton.GetComponent<Image>().sprite = ShowPasswordImage; 
+            SignInSHButton.GetComponent<Image>().sprite = ShowPasswordImage;
         }
         SignInPassword.ForceLabelUpdate();
     }
@@ -291,6 +294,7 @@ public class AuthScript : MonoBehaviour
         if (Firebase.Auth.FirebaseAuth.DefaultInstance.CurrentUser != null)
         {
             SignInP.SetActive(false);
+            RememberMeP.SetActive(true);
 
             Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
             reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
@@ -326,7 +330,7 @@ public class AuthScript : MonoBehaviour
 
                 User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, tempName);
                 Instance = new CurrentUser(temp, auth.CurrentUser.UserId);
-                moveScene = true;
+                RememberMeName.text = tempName;
             });
         }
     }
@@ -339,6 +343,17 @@ public class AuthScript : MonoBehaviour
     {
         RegisterResultMessage.text = "";
         RegisterErrorImage.SetActive(false);
+    }
+    public void ContinueAsUser()
+    {
+        moveScene = true;
+    }
+    public void DontContinueAsUser()
+    {
+        SignInP.SetActive(true);
+        RememberMeP.SetActive(false);
+        Firebase.Auth.FirebaseAuth.DefaultInstance.SignOut();
+        Instance = new CurrentUser();
     }
 }
 
