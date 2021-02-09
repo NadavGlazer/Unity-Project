@@ -346,14 +346,20 @@ public class AuthScript : MonoBehaviour
     }
     public void ContinueAsUser()
     {
-        moveScene = true;
+        if (RememberMeName.text != "")
+        {
+            moveScene = true;
+        }
     }
     public void DontContinueAsUser()
     {
-        SignInP.SetActive(true);
-        RememberMeP.SetActive(false);
-        Firebase.Auth.FirebaseAuth.DefaultInstance.SignOut();
-        Instance = new CurrentUser();
+        if (RememberMeName.text != "")
+        {
+            SignInP.SetActive(true);
+            RememberMeP.SetActive(false);
+            Firebase.Auth.FirebaseAuth.DefaultInstance.SignOut();
+            Instance = new CurrentUser();
+        }
     }
 }
 

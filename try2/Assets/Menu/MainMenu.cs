@@ -12,13 +12,24 @@ public class MainMenu : MonoBehaviour
     public Text coinsTxt;
     public GameObject mainMenuPanel;
     public GameObject settingsPanel;
-
+    public GameObject MassageText;
+    public Text NameText;
+    float timerCount;
     // Start is called before the first frame update
     void Start()
     {
         coinsTxt.text = "coins: " + AuthScript.Instance.GetUser().GetCoins();
+        NameText.text = AuthScript.Instance.GetUser().GetName().ToString();
+        MassageText.GetComponent<Text>().text = "Hello " + AuthScript.Instance.GetUser().GetName().ToString();
+        timerCount = Time.time + 3f;
     }
-
+    void Update()
+    {
+        if (timerCount < Time.time)
+        {
+            MassageText.SetActive(false);
+        }
+    }
     // Update is called once per frame
 
     void GoToShop()
