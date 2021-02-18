@@ -40,6 +40,8 @@ public class AuthScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Firebase.Auth.FirebaseAuth.DefaultInstance.SignOut();
+
         //for (int i = 1; i < 11; i++)
         //{
         //    string json = JsonUtility.ToJson(new LeaderBoard(1, "temp", "0"));
@@ -91,6 +93,7 @@ public class AuthScript : MonoBehaviour
         if (moveScene)
         {
             SceneManager.LoadScene("MainMenu");
+            Time.timeScale = 1.1f;
         }
     }
     void HandleValueChanged(object sender, ValueChangedEventArgs args)
@@ -120,18 +123,16 @@ public class AuthScript : MonoBehaviour
             {
                 if (task.IsCanceled)
                 {
-                    RegisterResultMessage.text = registerError;
-                    RegisterErrorImage.SetActive(true);
+                    RegisterErrorShow();
                     return;
                 }
                 if (task.IsFaulted)
                 {
-                    RegisterResultMessage.text = registerError;
-                    RegisterErrorImage.SetActive(true);
+                    RegisterErrorShow();
+
                     return;
                 }
 
-                RegisterResultMessage.text = registerSuccess;
 
                 // Firebase user has been created.
 
@@ -140,6 +141,8 @@ public class AuthScript : MonoBehaviour
 
                 WriteNewUserInDb(auth.CurrentUser.UserId, NewName.text.ToString());
                 moveScene = true;
+                RegisterResultMessage.text = registerSuccess;
+
             });
         }
         else
@@ -156,17 +159,16 @@ public class AuthScript : MonoBehaviour
             {
                 if (task1.IsCanceled)
                 {
-                    SignInResultMessage.text = signInError;
-                    SignInErrorImage.SetActive(true);
+                    SignInErrorShow();
+
                     return;
                 }
                 if (task1.IsFaulted)
                 {
-                    SignInResultMessage.text = signInError;
-                    SignInErrorImage.SetActive(true);
+                    SignInErrorShow();
+
                     return;
                 }
-                SignInResultMessage.text = signInSuccess;
 
                 Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
                 reference = reference.Child("Users").Child(auth.CurrentUser.UserId);
@@ -204,6 +206,7 @@ public class AuthScript : MonoBehaviour
                     User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, tempName);
                     Instance = new CurrentUser(temp, auth.CurrentUser.UserId);
                     moveScene = true;
+                    SignInResultMessage.text = signInSuccess;
 
                 });
             });
@@ -213,6 +216,16 @@ public class AuthScript : MonoBehaviour
             SignInResultMessage.text = blankInputError;
             SignInErrorImage.SetActive(true);
         }
+    }
+    void SignInErrorShow()
+    {
+        SignInResultMessage.text = signInError;
+        SignInErrorImage.SetActive(true);
+    }
+    void RegisterErrorShow()
+    {
+        RegisterResultMessage.text = registerError;
+        RegisterErrorImage.SetActive(true);
     }
     void WriteNewUserInDb(string id, string name)
     {
@@ -311,7 +324,9 @@ public class AuthScript : MonoBehaviour
                 int tempcoins = 0;
                 int tempBest = 0;
                 string tempName;
+
                 DataSnapshot snapshot = task.Result;
+
                 for (int i = 0; i < 5; i++)
                 {
                     tempCurrent.Add(int.Parse(snapshot.Child("CurrentColor").Child(i.ToString()).Value.ToString()));
@@ -330,6 +345,7 @@ public class AuthScript : MonoBehaviour
 
                 User temp = new User(tempcoins, tempOwned, tempCurrent, tempOptional, tempBest, tempName);
                 Instance = new CurrentUser(temp, auth.CurrentUser.UserId);
+                moveScene = true;
                 RememberMeName.text = tempName;
             });
         }

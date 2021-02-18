@@ -23,12 +23,12 @@ public class InGameUpdates : MonoBehaviour
     {
         temp = "";
         //Updating the score on the screen
-        int num = 7 - (Math.Round(SetUp.TotalRun) + " ").Length;
+        int num = 6 - (Math.Round(SetUp.TotalRun) + "").Length;
         for (int i = 0; i < num; i++)
         {
             temp += "0";
         }
-        temp += Math.Round(SetUp.TotalRun) + " ";
+        temp += Math.Round(SetUp.TotalRun).ToString();
         TotalMeters.text = temp;
         TotalMetersOnPause.text = temp;
 

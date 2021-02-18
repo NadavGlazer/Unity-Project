@@ -9,19 +9,27 @@ using Firebase.Unity;
 
 public class MainMenu : MonoBehaviour
 {
-    public Text coinsTxt;
-    public GameObject mainMenuPanel;
-    public GameObject settingsPanel;
+    public Text CoinsTxt;
+    public GameObject MainMenuPanel;
+    public GameObject SettingsPanel;
     public GameObject MassageText;
     public Text NameText;
     float timerCount;
     // Start is called before the first frame update
     void Start()
     {
-        coinsTxt.text = "coins: " + AuthScript.Instance.GetUser().GetCoins();
+        if (Time.timeScale == 1.1f)
+        {
+            MassageText.GetComponent<Text>().text = "Hello " + AuthScript.Instance.GetUser().GetName().ToString();
+            timerCount = Time.time + 3f;
+        }
+        else
+        {
+            timerCount = Time.time;
+        }
+        Time.timeScale = 1f;
+        CoinsTxt.text = "coins: " + AuthScript.Instance.GetUser().GetCoins();
         NameText.text = AuthScript.Instance.GetUser().GetName().ToString();
-        MassageText.GetComponent<Text>().text = "Hello " + AuthScript.Instance.GetUser().GetName().ToString();
-        timerCount = Time.time + 3f;
     }
     void Update()
     {
@@ -47,13 +55,13 @@ public class MainMenu : MonoBehaviour
     }
     void GoToSetting()
     {
-        mainMenuPanel.SetActive(false);
-        settingsPanel.SetActive(true);
+        MainMenuPanel.SetActive(false);
+        SettingsPanel.SetActive(true);
     }
     void GoToMainMenu()
     {
-        mainMenuPanel.SetActive(true);
-        settingsPanel.SetActive(false);
+        MainMenuPanel.SetActive(true);
+        SettingsPanel.SetActive(false);
     }
     void LogOut()
     {

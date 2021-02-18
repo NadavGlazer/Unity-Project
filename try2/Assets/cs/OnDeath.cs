@@ -18,6 +18,8 @@ public class OnDeath : MonoBehaviour
     string newBestScoreText;
     string newLeaderBoardScoreText;
     float timerCount;
+    int score;
+    int newCoins;
     void Start()
     {
         UpdateVer();
@@ -26,10 +28,11 @@ public class OnDeath : MonoBehaviour
     {
         if (Animations.DeathAnimationFinished && first)
         {
-            int newCoins = InGameUpdates.CoinsInCurrentRun;
+            newCoins = InGameUpdates.CoinsInCurrentRun;
             AuthScript.Instance.GetUser().ChangeCoins(newCoins);
 
-            int score = (int)Math.Round(SetUp.TotalRun);
+            score = (int)Math.Round(SetUp.TotalRun);
+
             scoreText.text = score.ToString();
             coinText.text = newCoins.ToString();
             totalCoinsText.text = AuthScript.Instance.GetUser().GetCoins().ToString();
@@ -37,6 +40,11 @@ public class OnDeath : MonoBehaviour
             if (score > AuthScript.Instance.GetUser().GetBestScore())
             {
                 AuthScript.Instance.GetUser().SetBestScore(score);
+                MassageText.GetComponent<Text>().text = newBestScoreText;
+                timerCount = Time.time + 4f;
+                MassageText.GetComponent<Text>().SetAllDirty();
+
+                MassageText.SetActive(true);
             }
 
             UpdateUser(AuthScript.Instance.GetUser());
@@ -46,12 +54,12 @@ public class OnDeath : MonoBehaviour
             scoreText.SetAllDirty();
             coinText.SetAllDirty();
             totalCoinsText.SetAllDirty();
+
         }
-        if (timerCount < Time.time)
+        else if (timerCount < Time.time && Animations.DeathAnimationFinished)
         {
             MassageText.SetActive(false);
         }
-
     }
     //starting new game
     public void PlayAgain()
@@ -68,17 +76,14 @@ public class OnDeath : MonoBehaviour
     {
         if (newScore < AuthScript.LeaderBoards[9].GetScore())
         {
-            if (newScore > AuthScript.Instance.GetUser().GetBestScore())
-            {
-                MassageText.GetComponent<Text>().text = newBestScoreText;
-                MassageText.GetComponent<Text>().SetAllDirty();
-            }
             return;
         }
         else
         {
             MassageText.GetComponent<Text>().text = newLeaderBoardScoreText;
+            timerCount = Time.time + 4f;
             MassageText.GetComponent<Text>().SetAllDirty();
+            MassageText.SetActive(true);
 
             AuthScript.LeaderBoards[9].SetScore(newScore);
             AuthScript.LeaderBoards[9].SetName(newName);
@@ -110,7 +115,6 @@ public class OnDeath : MonoBehaviour
         first = true;
         newBestScoreText = " You have new best score!";
         newLeaderBoardScoreText = " You have new leaderboard score!";
-        timerCount = Time.time + 3f;
         MassageText.GetComponent<Text>().text = "";
     }
 }

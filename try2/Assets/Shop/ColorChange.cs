@@ -11,17 +11,17 @@ using Firebase.Unity;
 public class ColorChange : MonoBehaviour
 {
     DatabaseReference reference;
-    public Text isUsed;
-    public Material mat;
+    public Material PlayerMaterial;
     public Text mText;
     public Scrollbar r;
     public Scrollbar g;
     public Scrollbar b;
     public GameObject shopPanel;
-    public GameObject creatingNewPanel;
-    public Text totalCoins;
-    public GameObject buyButton;
-    public GameObject useButton;
+    public GameObject CreatingNewPanel;
+    public Text TotalCoins;
+    public GameObject BuyButton;
+    public GameObject UseButton;
+    public GameObject Using;
     bool isCreating;
     int rn;
     int gn;
@@ -55,7 +55,7 @@ public class ColorChange : MonoBehaviour
 
         isCreating = false;
 
-        mat.SetColor("_Color", new Color(
+        PlayerMaterial.SetColor("_Color", new Color(
             AuthScript.Instance.GetUser().GetCurrent()[0],
             AuthScript.Instance.GetUser().GetCurrent()[1],
             AuthScript.Instance.GetUser().GetCurrent()[2],
@@ -67,30 +67,30 @@ public class ColorChange : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        totalCoins.SetAllDirty();
+        TotalCoins.SetAllDirty();
         mText.SetAllDirty();
-        isUsed.SetAllDirty();
+        //Using.SetAllDirty();
         if (isCreating)
         {
             rn = (int)Math.Round(r.GetComponent<Scrollbar>().value * 255);
             gn = (int)Math.Round(g.GetComponent<Scrollbar>().value * 255);
             bn = (int)Math.Round(b.GetComponent<Scrollbar>().value * 255);
-            mat.SetColor("_Color", new Color32((byte)rn, (byte)gn, (byte)bn, 150));
+            PlayerMaterial.SetColor("_Color", new Color32((byte)rn, (byte)gn, (byte)bn, 150));
         }
         else
         {
             if (IsCurrentColorUsed())
             {
-                isUsed.text = textUI[1];
-                useButton.SetActive(false);
+                //Using.text = textUI[1];
+                UseButton.SetActive(false);
             }
             else
             {
-                isUsed.text = textUI[0];
-                useButton.SetActive(true);
+                //Using.text = textUI[0];
+                UseButton.SetActive(true);
             }
             UpdateIfOwned();
-            mat.SetColor("_Color", new Color32(
+            PlayerMaterial.SetColor("_Color", new Color32(
                (byte)AuthScript.Instance.GetUser().GetOptional()[place],
                (byte)AuthScript.Instance.GetUser().GetOptional()[place + 1],
                 (byte)AuthScript.Instance.GetUser().GetOptional()[place + 2],
@@ -124,18 +124,31 @@ public class ColorChange : MonoBehaviour
         if (IsCurrentColorOwned())
         {
             mText.text = textUI[2];
-            buyButton.SetActive(false);
+            if (IsCurrentColorUsed())
+            {
+                Using.SetActive(true);
+                BuyButton.SetActive(false);
+                UseButton.SetActive(false);
+            }
+            else
+            {
+                Using.SetActive(false);
+                BuyButton.SetActive(false);
+                UseButton.SetActive(true);
+            }
         }
         else
         {
             mText.text = textUI[3];
-            buyButton.SetActive(true);
+            Using.SetActive(false);
+            BuyButton.SetActive(true);
+            UseButton.SetActive(false);
         }
     }
     void GoToCreateNewColor()
     {
         shopPanel.SetActive(false);
-        creatingNewPanel.SetActive(true);
+        CreatingNewPanel.SetActive(true);
 
         r.GetComponent<Scrollbar>().value = (float)AuthScript.Instance.GetUser().GetOptional()[place] / 255;
         g.GetComponent<Scrollbar>().value = (float)AuthScript.Instance.GetUser().GetOptional()[place + 1] / 255;
@@ -197,17 +210,19 @@ public class ColorChange : MonoBehaviour
             AuthScript.Instance.GetUser().SetCurrentPlace(place);
 
             UpdateUser(AuthScript.Instance.GetUser());
-
-            isUsed.text = textUI[1];
+            Using.SetActive(true);
+            BuyButton.SetActive(false);
+            UseButton.SetActive(false);
+            //Using.text = textUI[1];
         }
     }
     void BackToMainPage()
     {
         shopPanel.SetActive(true);
-        creatingNewPanel.SetActive(false);
+        CreatingNewPanel.SetActive(false);
         isCreating = false;
 
-        mat.SetColor("_Color", new Color(
+        PlayerMaterial.SetColor("_Color", new Color(
                  AuthScript.Instance.GetUser().GetOptional()[place],
                  AuthScript.Instance.GetUser().GetOptional()[place + 1],
                  AuthScript.Instance.GetUser().GetOptional()[place + 2],
@@ -216,7 +231,7 @@ public class ColorChange : MonoBehaviour
     }
     void SetCoins()
     {
-        totalCoins.text = AuthScript.Instance.GetUser().GetCoins().ToString();
+        TotalCoins.text = AuthScript.Instance.GetUser().GetCoins().ToString();
     }
     bool IsCurrentColorOwned()
     {

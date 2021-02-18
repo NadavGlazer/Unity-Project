@@ -246,8 +246,8 @@ public class Move : MonoBehaviour
         pixelAmountForSwipe = 100;
         movePositionPerFrameLR = 0.07f;
         frameAmountBetwinMovement = 1;
-        firstJumpForce = 3.5f;
-        secondJumpForce = 2f;
+        firstJumpForce = 3.3f;
+        secondJumpForce = 1.9f;
         slideDownForce = -4f;
     }
 }
