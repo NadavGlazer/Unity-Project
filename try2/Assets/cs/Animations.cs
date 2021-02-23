@@ -7,7 +7,7 @@ public class Animations : MonoBehaviour
 {
     public static bool DeathAnimationFinished;
     public static bool SlideDown;
-    Animator animator;
+    public Animator animator;
     bool left;
     bool right;
     bool isGrounded;
