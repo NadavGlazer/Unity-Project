@@ -5,12 +5,14 @@ using UnityEngine.UI;
 
 public class ItemView
 {
-    public Text NamePlace;
+    public Text Name;
+    public Text Place;
     public Text Score;
     public string ScoreID;
     public ItemView(Transform rootView)
     {
-        NamePlace = rootView.Find("NamePlaceText").GetComponent<Text>();
+        Name = rootView.Find("NameText").GetComponent<Text>();
+        Place = rootView.Find("PlaceText").GetComponent<Text>();
         Score = rootView.Find("ScoreText").GetComponent<Text>();
         ScoreID = "";
     }
@@ -18,13 +20,13 @@ public class ItemView
     {
         if (ScoreID == AuthScript.Instance.GetUserId())
         {
-            NamePlace.fontStyle = FontStyle.Bold;
-            Score.fontStyle = FontStyle.Bold;
+            Name.fontStyle = FontStyle.Bold;
+            //Score.fontStyle = FontStyle.Bold;
         }
         else
         {
-            NamePlace.fontStyle = FontStyle.Normal;
-            Score.fontStyle = FontStyle.Normal;
+            Name.fontStyle = FontStyle.Normal;
+            //Score.fontStyle = FontStyle.Normal;
         }
     }
 }

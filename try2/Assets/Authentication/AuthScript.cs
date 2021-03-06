@@ -113,7 +113,7 @@ public class AuthScript : MonoBehaviour
                     args.Snapshot.Child((i + 1).ToString()).Child("ID").Value.ToString());
             }
         }
-        LeaderBoardCS.HasChanged = true;
+        ScrollViewAdapter.HasChanged = true;
     }
     void Register()
     {

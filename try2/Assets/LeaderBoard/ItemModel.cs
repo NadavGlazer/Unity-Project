@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ItemModel
 {
-    public string NamePlace;
+    public string Name;
+    public string Place;
     public string Score;
+    public string IDScore;
 }
