@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Firebase;
@@ -65,7 +66,10 @@ public class MainMenu : MonoBehaviour
     }
     void LogOut()
     {
+        //if (EditorUtility.DisplayDialog("a", "aa", "ok", "no"))
+        //{
         Firebase.Auth.FirebaseAuth.DefaultInstance.SignOut();
         SceneManager.LoadScene("Authentication");
+        //}
     }
 }
