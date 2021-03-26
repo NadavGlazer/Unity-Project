@@ -82,6 +82,7 @@ public class AuthScript : MonoBehaviour
         SignInResultMessage.text = "";
 
         RememberMe();
+        //Application.runInBackground = false;
     }
 
     // Update is called once per frame
